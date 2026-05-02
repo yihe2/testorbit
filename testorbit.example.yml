@@ -1,0 +1,7 @@
+tasks:
+  unit:
+    runner: pytest
+    command: pytest tests
+  smoke:
+    runner: pytest
+    command: pytest -m smoke
