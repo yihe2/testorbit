@@ -2,6 +2,12 @@ tasks:
   unit:
     runner: pytest
     command: pytest tests
+    tags:
+      - fast
+      - local
   smoke:
     runner: pytest
     command: pytest -m smoke
+    tags:
+      - smoke
+      - focused
