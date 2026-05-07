@@ -100,3 +100,9 @@ That keeps your history natural and believable while still reaching the target v
 This repo starts as a scaffold plus roadmap. Development should follow the weekly plan in [docs/roadmap.md](docs/roadmap.md) and the commit suggestions in [docs/weekly-commit-plan.md](docs/weekly-commit-plan.md).
 
 For early config design, see [docs/config-schema.md](docs/config-schema.md) and the starter sample in `testorbit.example.yml`.
+
+## Early CLI Commands
+
+- `testorbit version`
+- `testorbit doctor --config testorbit.example.yml`
+- `testorbit list --config testorbit.example.yml`

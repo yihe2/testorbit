@@ -11,3 +11,9 @@ tasks:
     tags:
       - smoke
       - focused
+  api:
+    runner: pytest
+    command: pytest tests/api
+    tags:
+      - api
+      - integration
