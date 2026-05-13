@@ -106,3 +106,4 @@ For early config design, see [docs/config-schema.md](docs/config-schema.md) and 
 - `testorbit version`
 - `testorbit doctor --config testorbit.example.yml`
 - `testorbit list --config testorbit.example.yml`
+- `testorbit show unit --config testorbit.example.yml`

@@ -57,6 +57,23 @@ def list_tasks(config: Path) -> int:
     return 0
 
 
+def show_task(config: Path, task_name: str) -> int:
+    data = load_config(config)
+    tasks = data.get("tasks", {})
+
+    if not isinstance(tasks, dict):
+        raise ValueError("'tasks' must be a mapping of task names to command definitions.")
+
+    task = tasks.get(task_name)
+    if not isinstance(task, dict):
+        raise ValueError(f"Task not found: {task_name}")
+
+    console.print(f"Task: {task_name}")
+    for key, value in task.items():
+        console.print(f"{key}: {value}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="testorbit", description="Run and manage test tasks from one simple CLI.")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -68,6 +85,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     list_parser = subparsers.add_parser("list", help="List configured test tasks.")
     list_parser.add_argument("--config", "-c", default="testorbit.yml")
+
+    show_parser = subparsers.add_parser("show", help="Show details for one configured test task.")
+    show_parser.add_argument("task_name")
+    show_parser.add_argument("--config", "-c", default="testorbit.yml")
 
     return parser
 
@@ -83,6 +104,8 @@ def main(argv: list[str] | None = None) -> int:
             return doctor(Path(args.config))
         if args.command == "list":
             return list_tasks(Path(args.config))
+        if args.command == "show":
+            return show_task(Path(args.config), args.task_name)
     except ValueError as exc:
         console.print(f"[red]{exc}[/red]")
         return 1
