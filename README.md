@@ -101,6 +101,8 @@ This repo starts as a scaffold plus roadmap. Development should follow the weekl
 
 For early config design, see [docs/config-schema.md](docs/config-schema.md) and the starter sample in `testorbit.example.yml`.
 
+Troubleshooting notes live in [docs/troubleshooting.md](docs/troubleshooting.md).
+
 ## Early CLI Commands
 
 - `testorbit version`
