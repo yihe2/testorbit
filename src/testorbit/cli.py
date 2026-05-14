@@ -10,6 +10,23 @@ from rich.console import Console
 console = Console()
 
 
+def get_tasks(data: dict) -> dict:
+    tasks = data.get("tasks", {})
+
+    if not isinstance(tasks, dict):
+        raise ValueError("'tasks' must be a mapping of task names to command definitions.")
+
+    return tasks
+
+
+def validate_tasks(tasks: dict) -> None:
+    for task_name, task in tasks.items():
+        if not isinstance(task, dict):
+            raise ValueError(f"Task '{task_name}' must be a mapping.")
+        if not task.get("command"):
+            raise ValueError(f"Task '{task_name}' must define a command.")
+
+
 def load_config(config_path: Path) -> dict:
     if not config_path.exists():
         raise ValueError(f"Config file not found: {config_path}")
@@ -30,10 +47,8 @@ def version() -> int:
 
 def doctor(config: Path) -> int:
     data = load_config(config)
-    tasks = data.get("tasks", {})
-
-    if not isinstance(tasks, dict):
-        raise ValueError("'tasks' must be a mapping of task names to command definitions.")
+    tasks = get_tasks(data)
+    validate_tasks(tasks)
 
     console.print(f"Config loaded from {config}")
     console.print(f"Discovered {len(tasks)} task(s)")
@@ -42,10 +57,7 @@ def doctor(config: Path) -> int:
 
 def list_tasks(config: Path) -> int:
     data = load_config(config)
-    tasks = data.get("tasks", {})
-
-    if not isinstance(tasks, dict):
-        raise ValueError("'tasks' must be a mapping of task names to command definitions.")
+    tasks = get_tasks(data)
 
     if not tasks:
         console.print("No tasks configured.")
@@ -59,10 +71,7 @@ def list_tasks(config: Path) -> int:
 
 def show_task(config: Path, task_name: str) -> int:
     data = load_config(config)
-    tasks = data.get("tasks", {})
-
-    if not isinstance(tasks, dict):
-        raise ValueError("'tasks' must be a mapping of task names to command definitions.")
+    tasks = get_tasks(data)
 
     task = tasks.get(task_name)
     if not isinstance(task, dict):

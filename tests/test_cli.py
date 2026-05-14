@@ -32,6 +32,15 @@ def test_doctor_reports_discovered_tasks(tmp_path: Path) -> None:
     assert exit_code == 0
 
 
+def test_doctor_rejects_task_without_command(tmp_path: Path) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text(yaml.safe_dump({"tasks": {"unit": {"runner": "pytest"}}}), encoding="utf-8")
+
+    exit_code = main(["doctor", "--config", str(config_path)])
+
+    assert exit_code == 1
+
+
 def test_list_reports_task_names(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     config_path = tmp_path / "testorbit.yml"
     config_path.write_text(
