@@ -109,3 +109,4 @@ Troubleshooting notes live in [docs/troubleshooting.md](docs/troubleshooting.md)
 - `testorbit doctor --config testorbit.example.yml`
 - `testorbit list --config testorbit.example.yml`
 - `testorbit show unit --config testorbit.example.yml`
+- `testorbit run unit --dry-run --config testorbit.example.yml`

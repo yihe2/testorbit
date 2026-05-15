@@ -83,6 +83,26 @@ def show_task(config: Path, task_name: str) -> int:
     return 0
 
 
+def run_task(config: Path, task_name: str, dry_run: bool) -> int:
+    data = load_config(config)
+    tasks = get_tasks(data)
+
+    task = tasks.get(task_name)
+    if not isinstance(task, dict):
+        raise ValueError(f"Task not found: {task_name}")
+
+    command = task.get("command")
+    if not command:
+        raise ValueError(f"Task '{task_name}' must define a command.")
+
+    if dry_run:
+        console.print(f"Would run: {command}")
+        return 0
+
+    console.print(f"Run support is not implemented yet: {task_name}")
+    return 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="testorbit", description="Run and manage test tasks from one simple CLI.")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -98,6 +118,11 @@ def build_parser() -> argparse.ArgumentParser:
     show_parser = subparsers.add_parser("show", help="Show details for one configured test task.")
     show_parser.add_argument("task_name")
     show_parser.add_argument("--config", "-c", default="testorbit.yml")
+
+    run_parser = subparsers.add_parser("run", help="Run one configured test task.")
+    run_parser.add_argument("task_name")
+    run_parser.add_argument("--config", "-c", default="testorbit.yml")
+    run_parser.add_argument("--dry-run", action="store_true", help="Print the command without executing it.")
 
     return parser
 
@@ -115,6 +140,8 @@ def main(argv: list[str] | None = None) -> int:
             return list_tasks(Path(args.config))
         if args.command == "show":
             return show_task(Path(args.config), args.task_name)
+        if args.command == "run":
+            return run_task(Path(args.config), args.task_name, args.dry_run)
     except ValueError as exc:
         console.print(f"[red]{exc}[/red]")
         return 1
