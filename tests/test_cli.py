@@ -94,3 +94,13 @@ def test_run_executes_configured_command(tmp_path: Path) -> None:
 
     assert exit_code == 0
     run_command.assert_called_once_with("pytest tests", shell=True, check=False)
+
+
+def test_run_returns_command_exit_code(tmp_path: Path) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text(yaml.safe_dump({"tasks": {"unit": {"command": "pytest tests"}}}), encoding="utf-8")
+
+    with patch("testorbit.cli.subprocess.run", return_value=Mock(returncode=2)):
+        exit_code = main(["run", "unit", "--config", str(config_path)])
+
+    assert exit_code == 2

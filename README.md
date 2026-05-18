@@ -110,3 +110,6 @@ Troubleshooting notes live in [docs/troubleshooting.md](docs/troubleshooting.md)
 - `testorbit list --config testorbit.example.yml`
 - `testorbit show unit --config testorbit.example.yml`
 - `testorbit run unit --dry-run --config testorbit.example.yml`
+- `testorbit run unit --config testorbit.example.yml`
+
+`run` returns the same exit code as the configured command, which makes it suitable for scripts and CI steps later in the project.
