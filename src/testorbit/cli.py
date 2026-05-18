@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import subprocess
 import sys
 from pathlib import Path
 
@@ -99,8 +100,9 @@ def run_task(config: Path, task_name: str, dry_run: bool) -> int:
         console.print(f"Would run: {command}")
         return 0
 
-    console.print(f"Run support is not implemented yet: {task_name}")
-    return 1
+    console.print(f"Running task '{task_name}': {command}")
+    completed = subprocess.run(command, shell=True, check=False)
+    return completed.returncode
 
 
 def build_parser() -> argparse.ArgumentParser:
