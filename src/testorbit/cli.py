@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import argparse
-import subprocess
 import sys
 from pathlib import Path
 
 import yaml
 from rich.console import Console
+
+from testorbit.runner import execute_command
 
 console = Console()
 
@@ -101,8 +102,8 @@ def run_task(config: Path, task_name: str, dry_run: bool) -> int:
         return 0
 
     console.print(f"Running task '{task_name}': {command}")
-    completed = subprocess.run(command, shell=True, check=False)
-    return completed.returncode
+    result = execute_command(task_name, command)
+    return result.exit_code
 
 
 def build_parser() -> argparse.ArgumentParser:
