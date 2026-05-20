@@ -103,6 +103,8 @@ For early config design, see [docs/config-schema.md](docs/config-schema.md) and 
 
 Troubleshooting notes live in [docs/troubleshooting.md](docs/troubleshooting.md).
 
+Early architecture notes live in [docs/architecture.md](docs/architecture.md).
+
 ## Early CLI Commands
 
 - `testorbit version`
