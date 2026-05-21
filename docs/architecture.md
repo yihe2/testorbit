@@ -16,7 +16,6 @@ Config loading currently lives in the CLI module while the schema is still small
 
 ## Near-Term Direction
 
-- add duration tracking to `RunResult`
 - capture command output when useful
 - persist run metadata to local history
 - keep subprocess behavior isolated behind runner tests

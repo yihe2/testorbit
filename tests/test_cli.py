@@ -90,7 +90,7 @@ def test_run_executes_configured_command(tmp_path: Path) -> None:
     config_path = tmp_path / "testorbit.yml"
     config_path.write_text(yaml.safe_dump({"tasks": {"unit": {"command": "pytest tests"}}}), encoding="utf-8")
 
-    with patch("testorbit.cli.execute_command", return_value=RunResult("unit", "pytest tests", 0)) as run_command:
+    with patch("testorbit.cli.execute_command", return_value=RunResult("unit", "pytest tests", 0, 0.12)) as run_command:
         exit_code = main(["run", "unit", "--config", str(config_path)])
 
     assert exit_code == 0
@@ -101,7 +101,7 @@ def test_run_returns_command_exit_code(tmp_path: Path) -> None:
     config_path = tmp_path / "testorbit.yml"
     config_path.write_text(yaml.safe_dump({"tasks": {"unit": {"command": "pytest tests"}}}), encoding="utf-8")
 
-    with patch("testorbit.cli.execute_command", return_value=RunResult("unit", "pytest tests", 2)):
+    with patch("testorbit.cli.execute_command", return_value=RunResult("unit", "pytest tests", 2, 0.12)):
         exit_code = main(["run", "unit", "--config", str(config_path)])
 
     assert exit_code == 2

@@ -103,6 +103,7 @@ def run_task(config: Path, task_name: str, dry_run: bool) -> int:
 
     console.print(f"Running task '{task_name}': {command}")
     result = execute_command(task_name, command)
+    console.print(f"Finished in {result.duration_seconds:.2f}s")
     return result.exit_code
 
 
