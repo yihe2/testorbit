@@ -12,6 +12,14 @@ class RunResult:
     exit_code: int
     duration_seconds: float
 
+    def to_dict(self) -> dict:
+        return {
+            "task_name": self.task_name,
+            "command": self.command,
+            "exit_code": self.exit_code,
+            "duration_seconds": round(self.duration_seconds, 3),
+        }
+
 
 def execute_command(task_name: str, command: str) -> RunResult:
     started_at = time.perf_counter()
