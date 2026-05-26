@@ -7,6 +7,7 @@ from pathlib import Path
 import yaml
 from rich.console import Console
 
+from testorbit.history import append_run_result
 from testorbit.runner import execute_command
 
 console = Console()
@@ -85,7 +86,7 @@ def show_task(config: Path, task_name: str) -> int:
     return 0
 
 
-def run_task(config: Path, task_name: str, dry_run: bool) -> int:
+def run_task(config: Path, task_name: str, dry_run: bool, history_path: Path) -> int:
     data = load_config(config)
     tasks = get_tasks(data)
 
@@ -103,6 +104,7 @@ def run_task(config: Path, task_name: str, dry_run: bool) -> int:
 
     console.print(f"Running task '{task_name}': {command}")
     result = execute_command(task_name, command)
+    append_run_result(history_path, result)
     console.print(f"Finished in {result.duration_seconds:.2f}s")
     return result.exit_code
 
@@ -127,6 +129,7 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("task_name")
     run_parser.add_argument("--config", "-c", default="testorbit.yml")
     run_parser.add_argument("--dry-run", action="store_true", help="Print the command without executing it.")
+    run_parser.add_argument("--history-path", default="run-history/runs.jsonl", help="Where run metadata is stored.")
 
     return parser
 
@@ -145,7 +148,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "show":
             return show_task(Path(args.config), args.task_name)
         if args.command == "run":
-            return run_task(Path(args.config), args.task_name, args.dry_run)
+            return run_task(Path(args.config), args.task_name, args.dry_run, Path(args.history_path))
     except ValueError as exc:
         console.print(f"[red]{exc}[/red]")
         return 1

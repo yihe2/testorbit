@@ -88,20 +88,23 @@ def test_run_dry_run_reports_command(tmp_path: Path, capsys: pytest.CaptureFixtu
 
 def test_run_executes_configured_command(tmp_path: Path) -> None:
     config_path = tmp_path / "testorbit.yml"
+    history_path = tmp_path / "runs.jsonl"
     config_path.write_text(yaml.safe_dump({"tasks": {"unit": {"command": "pytest tests"}}}), encoding="utf-8")
 
     with patch("testorbit.cli.execute_command", return_value=RunResult("unit", "pytest tests", 0, 0.12)) as run_command:
-        exit_code = main(["run", "unit", "--config", str(config_path)])
+        exit_code = main(["run", "unit", "--config", str(config_path), "--history-path", str(history_path)])
 
     assert exit_code == 0
     run_command.assert_called_once_with("unit", "pytest tests")
+    assert history_path.exists()
 
 
 def test_run_returns_command_exit_code(tmp_path: Path) -> None:
     config_path = tmp_path / "testorbit.yml"
+    history_path = tmp_path / "runs.jsonl"
     config_path.write_text(yaml.safe_dump({"tasks": {"unit": {"command": "pytest tests"}}}), encoding="utf-8")
 
     with patch("testorbit.cli.execute_command", return_value=RunResult("unit", "pytest tests", 2, 0.12)):
-        exit_code = main(["run", "unit", "--config", str(config_path)])
+        exit_code = main(["run", "unit", "--config", str(config_path), "--history-path", str(history_path)])
 
     assert exit_code == 2
