@@ -105,6 +105,8 @@ Troubleshooting notes live in [docs/troubleshooting.md](docs/troubleshooting.md)
 
 Early architecture notes live in [docs/architecture.md](docs/architecture.md).
 
+Run history notes live in [docs/run-history.md](docs/run-history.md).
+
 ## Early CLI Commands
 
 - `testorbit version`
@@ -113,5 +115,6 @@ Early architecture notes live in [docs/architecture.md](docs/architecture.md).
 - `testorbit show unit --config testorbit.example.yml`
 - `testorbit run unit --dry-run --config testorbit.example.yml`
 - `testorbit run unit --config testorbit.example.yml`
+- `testorbit run unit --config testorbit.example.yml --history-path tmp/runs.jsonl`
 
 `run` returns the same exit code as the configured command, which makes it suitable for scripts and CI steps later in the project.
