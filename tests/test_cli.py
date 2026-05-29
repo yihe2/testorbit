@@ -5,6 +5,7 @@ import pytest
 import yaml
 
 from testorbit.cli import load_config, main
+from testorbit.history import append_run_result
 from testorbit.runner import RunResult
 
 
@@ -108,3 +109,14 @@ def test_run_returns_command_exit_code(tmp_path: Path) -> None:
         exit_code = main(["run", "unit", "--config", str(config_path), "--history-path", str(history_path)])
 
     assert exit_code == 2
+
+
+def test_history_reports_recent_records(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
+
+    exit_code = main(["history", "--history-path", str(history_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "unit exit=0 duration=0.42s" in captured.out

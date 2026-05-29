@@ -7,7 +7,7 @@ from pathlib import Path
 import yaml
 from rich.console import Console
 
-from testorbit.history import append_run_result
+from testorbit.history import append_run_result, read_run_history
 from testorbit.runner import execute_command
 
 console = Console()
@@ -109,6 +109,20 @@ def run_task(config: Path, task_name: str, dry_run: bool, history_path: Path) ->
     return result.exit_code
 
 
+def show_history(history_path: Path, limit: int) -> int:
+    records = read_run_history(history_path)
+    if not records:
+        console.print("No run history found.")
+        return 0
+
+    for record in records[-limit:]:
+        console.print(
+            f"{record['task_name']} exit={record['exit_code']} "
+            f"duration={record['duration_seconds']}s"
+        )
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="testorbit", description="Run and manage test tasks from one simple CLI.")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -131,6 +145,10 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--dry-run", action="store_true", help="Print the command without executing it.")
     run_parser.add_argument("--history-path", default="run-history/runs.jsonl", help="Where run metadata is stored.")
 
+    history_parser = subparsers.add_parser("history", help="Show recent task run records.")
+    history_parser.add_argument("--history-path", default="run-history/runs.jsonl", help="Where run metadata is stored.")
+    history_parser.add_argument("--limit", type=int, default=5, help="Maximum records to show.")
+
     return parser
 
 
@@ -149,6 +167,8 @@ def main(argv: list[str] | None = None) -> int:
             return show_task(Path(args.config), args.task_name)
         if args.command == "run":
             return run_task(Path(args.config), args.task_name, args.dry_run, Path(args.history_path))
+        if args.command == "history":
+            return show_history(Path(args.history_path), args.limit)
     except ValueError as exc:
         console.print(f"[red]{exc}[/red]")
         return 1

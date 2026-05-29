@@ -116,5 +116,6 @@ Run history notes live in [docs/run-history.md](docs/run-history.md).
 - `testorbit run unit --dry-run --config testorbit.example.yml`
 - `testorbit run unit --config testorbit.example.yml`
 - `testorbit run unit --config testorbit.example.yml --history-path tmp/runs.jsonl`
+- `testorbit history --history-path tmp/runs.jsonl`
 
 `run` returns the same exit code as the configured command, which makes it suitable for scripts and CI steps later in the project.
