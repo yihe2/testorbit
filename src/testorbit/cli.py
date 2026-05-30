@@ -110,6 +110,9 @@ def run_task(config: Path, task_name: str, dry_run: bool, history_path: Path) ->
 
 
 def show_history(history_path: Path, limit: int) -> int:
+    if limit < 1:
+        raise ValueError("History limit must be at least 1.")
+
     records = read_run_history(history_path)
     if not records:
         console.print("No run history found.")

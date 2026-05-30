@@ -120,3 +120,9 @@ def test_history_reports_recent_records(tmp_path: Path, capsys: pytest.CaptureFi
 
     assert exit_code == 0
     assert "unit exit=0 duration=0.42s" in captured.out
+
+
+def test_history_rejects_invalid_limit(tmp_path: Path) -> None:
+    exit_code = main(["history", "--history-path", str(tmp_path / "runs.jsonl"), "--limit", "0"])
+
+    assert exit_code == 1

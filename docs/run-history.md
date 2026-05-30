@@ -21,4 +21,10 @@ Use `--history-path` to write history somewhere else:
 testorbit run unit --config testorbit.example.yml --history-path tmp/runs.jsonl
 ```
 
+Read recent records with:
+
+```powershell
+testorbit history --history-path tmp/runs.jsonl --limit 5
+```
+
 Dry runs do not write history because they do not execute a task.
