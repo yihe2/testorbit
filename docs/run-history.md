@@ -27,4 +27,6 @@ Read recent records with:
 testorbit history --history-path tmp/runs.jsonl --limit 5
 ```
 
+The history command prints a small pass/fail summary before listing recent records.
+
 Dry runs do not write history because they do not execute a task.

@@ -119,6 +119,7 @@ def test_history_reports_recent_records(tmp_path: Path, capsys: pytest.CaptureFi
     captured = capsys.readouterr()
 
     assert exit_code == 0
+    assert "Runs: 1 total, 1 passed, 0 failed" in captured.out
     assert "unit exit=0 duration=0.42s" in captured.out
 
 

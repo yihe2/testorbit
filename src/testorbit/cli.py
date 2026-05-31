@@ -7,7 +7,7 @@ from pathlib import Path
 import yaml
 from rich.console import Console
 
-from testorbit.history import append_run_result, read_run_history
+from testorbit.history import append_run_result, read_run_history, summarize_run_history
 from testorbit.runner import execute_command
 
 console = Console()
@@ -117,6 +117,12 @@ def show_history(history_path: Path, limit: int) -> int:
     if not records:
         console.print("No run history found.")
         return 0
+
+    summary = summarize_run_history(records)
+    console.print(
+        f"Runs: {summary['total']} total, "
+        f"{summary['passed']} passed, {summary['failed']} failed"
+    )
 
     for record in records[-limit:]:
         console.print(
