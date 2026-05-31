@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from testorbit.history import append_run_result, read_run_history
+from testorbit.history import append_run_result, read_run_history, summarize_run_history
 from testorbit.runner import RunResult
 
 
@@ -33,3 +33,17 @@ def test_read_run_history_returns_records(tmp_path: Path) -> None:
 
 def test_read_run_history_returns_empty_list_for_missing_file(tmp_path: Path) -> None:
     assert read_run_history(tmp_path / "missing.jsonl") == []
+
+
+def test_summarize_run_history_counts_passed_and_failed_runs() -> None:
+    records = [
+        {"task_name": "unit", "exit_code": 0},
+        {"task_name": "smoke", "exit_code": 1},
+        {"task_name": "api", "exit_code": 0},
+    ]
+
+    assert summarize_run_history(records) == {
+        "total": 3,
+        "passed": 2,
+        "failed": 1,
+    }

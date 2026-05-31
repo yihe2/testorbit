@@ -23,3 +23,15 @@ def read_run_history(history_path: Path) -> list[dict]:
         if line.strip():
             records.append(json.loads(line))
     return records
+
+
+def summarize_run_history(records: list[dict]) -> dict:
+    total = len(records)
+    failed = sum(1 for record in records if record.get("exit_code", 1) != 0)
+    passed = total - failed
+
+    return {
+        "total": total,
+        "passed": passed,
+        "failed": failed,
+    }
