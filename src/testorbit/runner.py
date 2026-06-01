@@ -12,11 +12,16 @@ class RunResult:
     exit_code: int
     duration_seconds: float
 
+    @property
+    def status(self) -> str:
+        return "passed" if self.exit_code == 0 else "failed"
+
     def to_dict(self) -> dict:
         return {
             "task_name": self.task_name,
             "command": self.command,
             "exit_code": self.exit_code,
+            "status": self.status,
             "duration_seconds": round(self.duration_seconds, 3),
         }
 

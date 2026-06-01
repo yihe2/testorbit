@@ -17,6 +17,7 @@ def test_append_run_result_writes_json_line(tmp_path: Path) -> None:
         "command": "pytest tests",
         "duration_seconds": 0.42,
         "exit_code": 0,
+        "status": "passed",
         "task_name": "unit",
     }
 

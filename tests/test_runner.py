@@ -26,5 +26,12 @@ def test_run_result_serializes_for_history() -> None:
         "task_name": "unit",
         "command": "pytest tests",
         "exit_code": 0,
+        "status": "passed",
         "duration_seconds": 1.235,
     }
+
+
+def test_run_result_marks_failed_status() -> None:
+    result = RunResult(task_name="unit", command="pytest tests", exit_code=1, duration_seconds=0.5)
+
+    assert result.status == "failed"

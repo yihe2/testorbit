@@ -27,7 +27,7 @@ def read_run_history(history_path: Path) -> list[dict]:
 
 def summarize_run_history(records: list[dict]) -> dict:
     total = len(records)
-    failed = sum(1 for record in records if record.get("exit_code", 1) != 0)
+    failed = sum(1 for record in records if record.get("status") == "failed" or record.get("exit_code", 1) != 0)
     passed = total - failed
 
     return {
