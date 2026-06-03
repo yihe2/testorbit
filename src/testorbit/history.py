@@ -35,3 +35,10 @@ def summarize_run_history(records: list[dict]) -> dict:
         "passed": passed,
         "failed": failed,
     }
+
+
+def filter_run_history(records: list[dict], status: str | None = None) -> list[dict]:
+    if status is None:
+        return records
+
+    return [record for record in records if record.get("status") == status]

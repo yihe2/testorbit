@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from testorbit.history import append_run_result, read_run_history, summarize_run_history
+from testorbit.history import append_run_result, filter_run_history, read_run_history, summarize_run_history
 from testorbit.runner import RunResult
 
 
@@ -48,3 +48,12 @@ def test_summarize_run_history_counts_passed_and_failed_runs() -> None:
         "passed": 2,
         "failed": 1,
     }
+
+
+def test_filter_run_history_by_status() -> None:
+    records = [
+        {"task_name": "unit", "status": "passed"},
+        {"task_name": "smoke", "status": "failed"},
+    ]
+
+    assert filter_run_history(records, "failed") == [{"task_name": "smoke", "status": "failed"}]
