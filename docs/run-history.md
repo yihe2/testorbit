@@ -29,4 +29,10 @@ testorbit history --history-path tmp/runs.jsonl --limit 5
 
 The history command prints a small pass/fail summary before listing recent records.
 
+Filter the output by status when investigating failures:
+
+```powershell
+testorbit history --history-path tmp/runs.jsonl --status failed
+```
+
 Dry runs do not write history because they do not execute a task.

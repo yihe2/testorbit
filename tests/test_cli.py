@@ -123,6 +123,19 @@ def test_history_reports_recent_records(tmp_path: Path, capsys: pytest.CaptureFi
     assert "unit exit=0 duration=0.42s" in captured.out
 
 
+def test_history_filters_records_by_status(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
+    append_run_result(history_path, RunResult("smoke", "pytest -m smoke", 1, 0.7))
+
+    exit_code = main(["history", "--history-path", str(history_path), "--status", "failed"])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "smoke exit=1 duration=0.7s" in captured.out
+    assert "unit exit=0" not in captured.out
+
+
 def test_history_rejects_invalid_limit(tmp_path: Path) -> None:
     exit_code = main(["history", "--history-path", str(tmp_path / "runs.jsonl"), "--limit", "0"])
 
