@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from testorbit.history import append_run_result, filter_run_history, read_run_history, summarize_run_history
+from testorbit.history import append_run_result, export_run_history, filter_run_history, read_run_history, summarize_run_history
 from testorbit.runner import RunResult
 
 
@@ -57,3 +57,12 @@ def test_filter_run_history_by_status() -> None:
     ]
 
     assert filter_run_history(records, "failed") == [{"task_name": "smoke", "status": "failed"}]
+
+
+def test_export_run_history_writes_json_array(tmp_path: Path) -> None:
+    export_path = tmp_path / "exports" / "runs.json"
+    records = [{"task_name": "unit", "status": "passed"}]
+
+    export_run_history(records, export_path)
+
+    assert export_path.read_text(encoding="utf-8") == '[\n  {\n    "status": "passed",\n    "task_name": "unit"\n  }\n]'
