@@ -140,3 +140,16 @@ def test_history_rejects_invalid_limit(tmp_path: Path) -> None:
     exit_code = main(["history", "--history-path", str(tmp_path / "runs.jsonl"), "--limit", "0"])
 
     assert exit_code == 1
+
+
+def test_export_history_writes_json_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    export_path = tmp_path / "exports" / "runs.json"
+    append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
+
+    exit_code = main(["export-history", "--history-path", str(history_path), "--output", str(export_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "Exported 1 record(s)" in captured.out
+    assert export_path.exists()

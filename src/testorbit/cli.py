@@ -7,7 +7,7 @@ from pathlib import Path
 import yaml
 from rich.console import Console
 
-from testorbit.history import append_run_result, filter_run_history, read_run_history, summarize_run_history
+from testorbit.history import append_run_result, export_run_history, filter_run_history, read_run_history, summarize_run_history
 from testorbit.runner import execute_command
 
 console = Console()
@@ -135,6 +135,16 @@ def show_history(history_path: Path, limit: int, status: str | None) -> int:
     return 0
 
 
+def export_history(history_path: Path, export_path: Path, status: str | None) -> int:
+    if status not in {None, "passed", "failed"}:
+        raise ValueError("History status must be 'passed' or 'failed'.")
+
+    records = filter_run_history(read_run_history(history_path), status)
+    export_run_history(records, export_path)
+    console.print(f"Exported {len(records)} record(s) to {export_path}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="testorbit", description="Run and manage test tasks from one simple CLI.")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -162,6 +172,11 @@ def build_parser() -> argparse.ArgumentParser:
     history_parser.add_argument("--limit", type=int, default=5, help="Maximum records to show.")
     history_parser.add_argument("--status", choices=["passed", "failed"], help="Only show records with this status.")
 
+    export_parser = subparsers.add_parser("export-history", help="Export run history as JSON.")
+    export_parser.add_argument("--history-path", default="run-history/runs.jsonl", help="Where run metadata is stored.")
+    export_parser.add_argument("--output", required=True, help="JSON file to write.")
+    export_parser.add_argument("--status", choices=["passed", "failed"], help="Only export records with this status.")
+
     return parser
 
 
@@ -182,6 +197,8 @@ def main(argv: list[str] | None = None) -> int:
             return run_task(Path(args.config), args.task_name, args.dry_run, Path(args.history_path))
         if args.command == "history":
             return show_history(Path(args.history_path), args.limit, args.status)
+        if args.command == "export-history":
+            return export_history(Path(args.history_path), Path(args.output), args.status)
     except ValueError as exc:
         console.print(f"[red]{exc}[/red]")
         return 1

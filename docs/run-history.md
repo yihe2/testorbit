@@ -35,4 +35,10 @@ Filter the output by status when investigating failures:
 testorbit history --history-path tmp/runs.jsonl --status failed
 ```
 
+Export history as a JSON array:
+
+```powershell
+testorbit export-history --history-path tmp/runs.jsonl --output reports/runs.json
+```
+
 Dry runs do not write history because they do not execute a task.
