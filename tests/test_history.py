@@ -1,7 +1,14 @@
 import json
 from pathlib import Path
 
-from testorbit.history import append_run_result, export_run_history, filter_run_history, read_run_history, summarize_run_history
+from testorbit.history import (
+    append_run_result,
+    export_run_history,
+    filter_run_history,
+    latest_run_for_task,
+    read_run_history,
+    summarize_run_history,
+)
 from testorbit.runner import RunResult
 
 
@@ -57,6 +64,24 @@ def test_filter_run_history_by_status() -> None:
     ]
 
     assert filter_run_history(records, "failed") == [{"task_name": "smoke", "status": "failed"}]
+
+
+def test_latest_run_for_task_returns_most_recent_match() -> None:
+    records = [
+        {"task_name": "unit", "status": "failed", "exit_code": 1},
+        {"task_name": "smoke", "status": "passed", "exit_code": 0},
+        {"task_name": "unit", "status": "passed", "exit_code": 0},
+    ]
+
+    assert latest_run_for_task(records, "unit") == {
+        "task_name": "unit",
+        "status": "passed",
+        "exit_code": 0,
+    }
+
+
+def test_latest_run_for_task_returns_none_when_missing() -> None:
+    assert latest_run_for_task([{"task_name": "unit", "status": "passed"}], "smoke") is None
 
 
 def test_export_run_history_writes_json_array(tmp_path: Path) -> None:

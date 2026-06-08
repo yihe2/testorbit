@@ -44,6 +44,13 @@ def filter_run_history(records: list[dict], status: str | None = None) -> list[d
     return [record for record in records if record.get("status") == status]
 
 
+def latest_run_for_task(records: list[dict], task_name: str) -> dict | None:
+    for record in reversed(records):
+        if record.get("task_name") == task_name:
+            return record
+    return None
+
+
 def export_run_history(records: list[dict], export_path: Path) -> None:
     export_path.parent.mkdir(parents=True, exist_ok=True)
     export_path.write_text(json.dumps(records, indent=2, sort_keys=True), encoding="utf-8")
