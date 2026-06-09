@@ -7,10 +7,31 @@ from pathlib import Path
 import yaml
 from rich.console import Console
 
-from testorbit.history import append_run_result, export_run_history, filter_run_history, read_run_history, summarize_run_history
+from testorbit.history import (
+    append_run_result,
+    export_run_history,
+    filter_run_history,
+    latest_run_for_task,
+    read_run_history,
+    summarize_run_history,
+)
 from testorbit.runner import execute_command
 
 console = Console()
+
+
+def format_last_run(record: dict | None, prefix: str = "last=") -> str:
+    if record is None:
+        return f"{prefix}none"
+
+    status = record.get("status")
+    if status not in {"passed", "failed"}:
+        status = "passed" if record.get("exit_code", 1) == 0 else "failed"
+
+    duration = record.get("duration_seconds")
+    if duration is None:
+        return f"{prefix}{status}"
+    return f"{prefix}{status} ({duration}s)"
 
 
 def get_tasks(data: dict) -> dict:
@@ -58,7 +79,7 @@ def doctor(config: Path) -> int:
     return 0
 
 
-def list_tasks(config: Path) -> int:
+def list_tasks(config: Path, history_path: Path) -> int:
     data = load_config(config)
     tasks = get_tasks(data)
 
@@ -66,13 +87,17 @@ def list_tasks(config: Path) -> int:
         console.print("No tasks configured.")
         return 0
 
+    records = read_run_history(history_path)
     console.print("Configured tasks:")
     for task_name in sorted(tasks):
-        console.print(f"- {task_name}")
+        if records:
+            console.print(f"- {task_name} {format_last_run(latest_run_for_task(records, task_name))}")
+        else:
+            console.print(f"- {task_name}")
     return 0
 
 
-def show_task(config: Path, task_name: str) -> int:
+def show_task(config: Path, task_name: str, history_path: Path) -> int:
     data = load_config(config)
     tasks = get_tasks(data)
 
@@ -83,6 +108,8 @@ def show_task(config: Path, task_name: str) -> int:
     console.print(f"Task: {task_name}")
     for key, value in task.items():
         console.print(f"{key}: {value}")
+    last_run = latest_run_for_task(read_run_history(history_path), task_name)
+    console.print(format_last_run(last_run, prefix="Last run: "))
     return 0
 
 
@@ -156,10 +183,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     list_parser = subparsers.add_parser("list", help="List configured test tasks.")
     list_parser.add_argument("--config", "-c", default="testorbit.yml")
+    list_parser.add_argument("--history-path", default="run-history/runs.jsonl", help="Where run metadata is stored.")
 
     show_parser = subparsers.add_parser("show", help="Show details for one configured test task.")
     show_parser.add_argument("task_name")
     show_parser.add_argument("--config", "-c", default="testorbit.yml")
+    show_parser.add_argument("--history-path", default="run-history/runs.jsonl", help="Where run metadata is stored.")
 
     run_parser = subparsers.add_parser("run", help="Run one configured test task.")
     run_parser.add_argument("task_name")
@@ -190,9 +219,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "doctor":
             return doctor(Path(args.config))
         if args.command == "list":
-            return list_tasks(Path(args.config))
+            return list_tasks(Path(args.config), Path(args.history_path))
         if args.command == "show":
-            return show_task(Path(args.config), args.task_name)
+            return show_task(Path(args.config), args.task_name, Path(args.history_path))
         if args.command == "run":
             return run_task(Path(args.config), args.task_name, args.dry_run, Path(args.history_path))
         if args.command == "history":
