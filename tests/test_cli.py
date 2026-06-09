@@ -76,6 +76,60 @@ def test_show_reports_task_details(tmp_path: Path, capsys: pytest.CaptureFixture
     assert "runner: pytest" in captured.out
 
 
+def test_list_includes_last_run_summary(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    history_path = tmp_path / "runs.jsonl"
+    config_path.write_text(
+        yaml.safe_dump({"tasks": {"unit": {"command": "pytest"}, "smoke": {"command": "pytest -m smoke"}}}),
+        encoding="utf-8",
+    )
+    append_run_result(history_path, RunResult("unit", "pytest", 0, 0.42))
+    append_run_result(history_path, RunResult("unit", "pytest", 1, 0.8))
+
+    exit_code = main(["list", "--config", str(config_path), "--history-path", str(history_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "- unit last=failed (0.8s)" in captured.out
+    assert "- smoke last=none" in captured.out
+
+
+def test_show_includes_last_run_summary(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    history_path = tmp_path / "runs.jsonl"
+    config_path.write_text(
+        yaml.safe_dump({"tasks": {"unit": {"command": "pytest tests"}}}),
+        encoding="utf-8",
+    )
+    append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
+
+    exit_code = main(["show", "unit", "--config", str(config_path), "--history-path", str(history_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "Last run: passed (0.42s)" in captured.out
+
+
+def test_list_reports_empty_config(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text(yaml.safe_dump({"tasks": {}}), encoding="utf-8")
+
+    exit_code = main(["list", "--config", str(config_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "No tasks configured." in captured.out
+
+
+def test_list_help_mentions_last_run_status(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as exc_info:
+        main(["list", "--help"])
+
+    captured = capsys.readouterr()
+    assert exc_info.value.code == 0
+    assert "last run status" in captured.out
+
+
 def test_run_dry_run_reports_command(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     config_path = tmp_path / "testorbit.yml"
     config_path.write_text(yaml.safe_dump({"tasks": {"unit": {"command": "pytest tests"}}}), encoding="utf-8")
