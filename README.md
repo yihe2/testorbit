@@ -105,6 +105,8 @@ Troubleshooting notes live in [docs/troubleshooting.md](docs/troubleshooting.md)
 
 Early architecture notes live in [docs/architecture.md](docs/architecture.md).
 
+Task discovery notes live in [docs/task-discovery.md](docs/task-discovery.md).
+
 Run history notes live in [docs/run-history.md](docs/run-history.md).
 
 ## Early CLI Commands
