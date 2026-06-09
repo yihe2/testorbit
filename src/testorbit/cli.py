@@ -172,37 +172,57 @@ def export_history(history_path: Path, export_path: Path, status: str | None) ->
     return 0
 
 
+def add_config_argument(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--config",
+        "-c",
+        default="testorbit.yml",
+        help="YAML file that defines named test tasks.",
+    )
+
+
+def add_history_argument(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--history-path",
+        default="run-history/runs.jsonl",
+        help="JSONL file used to store and read task run history.",
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="testorbit", description="Run and manage test tasks from one simple CLI.")
+    parser = argparse.ArgumentParser(
+        prog="testorbit",
+        description="Run, inspect, and summarize saved test tasks from one CLI.",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    subparsers.add_parser("version", help="Show the current TestOrbit version.")
+    subparsers.add_parser("version", help="Print the installed TestOrbit version.")
 
-    doctor_parser = subparsers.add_parser("doctor", help="Validate the config file and show detected tasks.")
-    doctor_parser.add_argument("--config", "-c", default="testorbit.yml")
+    doctor_parser = subparsers.add_parser("doctor", help="Validate a config file and count discovered tasks.")
+    add_config_argument(doctor_parser)
 
-    list_parser = subparsers.add_parser("list", help="List configured test tasks.")
-    list_parser.add_argument("--config", "-c", default="testorbit.yml")
-    list_parser.add_argument("--history-path", default="run-history/runs.jsonl", help="Where run metadata is stored.")
+    list_parser = subparsers.add_parser("list", help="List configured tasks and their last run status.")
+    add_config_argument(list_parser)
+    add_history_argument(list_parser)
 
-    show_parser = subparsers.add_parser("show", help="Show details for one configured test task.")
-    show_parser.add_argument("task_name")
-    show_parser.add_argument("--config", "-c", default="testorbit.yml")
-    show_parser.add_argument("--history-path", default="run-history/runs.jsonl", help="Where run metadata is stored.")
+    show_parser = subparsers.add_parser("show", help="Show one task's command, metadata, and last run.")
+    show_parser.add_argument("task_name", help="Name of the task defined in the config file.")
+    add_config_argument(show_parser)
+    add_history_argument(show_parser)
 
-    run_parser = subparsers.add_parser("run", help="Run one configured test task.")
-    run_parser.add_argument("task_name")
-    run_parser.add_argument("--config", "-c", default="testorbit.yml")
+    run_parser = subparsers.add_parser("run", help="Execute one configured task and record the result.")
+    run_parser.add_argument("task_name", help="Name of the task defined in the config file.")
+    add_config_argument(run_parser)
     run_parser.add_argument("--dry-run", action="store_true", help="Print the command without executing it.")
-    run_parser.add_argument("--history-path", default="run-history/runs.jsonl", help="Where run metadata is stored.")
+    add_history_argument(run_parser)
 
-    history_parser = subparsers.add_parser("history", help="Show recent task run records.")
-    history_parser.add_argument("--history-path", default="run-history/runs.jsonl", help="Where run metadata is stored.")
-    history_parser.add_argument("--limit", type=int, default=5, help="Maximum records to show.")
+    history_parser = subparsers.add_parser("history", help="Show a pass/fail summary of recent task runs.")
+    add_history_argument(history_parser)
+    history_parser.add_argument("--limit", type=int, default=5, help="Maximum number of recent records to print.")
     history_parser.add_argument("--status", choices=["passed", "failed"], help="Only show records with this status.")
 
-    export_parser = subparsers.add_parser("export-history", help="Export run history as JSON.")
-    export_parser.add_argument("--history-path", default="run-history/runs.jsonl", help="Where run metadata is stored.")
+    export_parser = subparsers.add_parser("export-history", help="Write filtered run history to a JSON file.")
+    add_history_argument(export_parser)
     export_parser.add_argument("--output", required=True, help="JSON file to write.")
     export_parser.add_argument("--status", choices=["passed", "failed"], help="Only export records with this status.")
 
