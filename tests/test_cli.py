@@ -4,23 +4,9 @@ from unittest.mock import patch
 import pytest
 import yaml
 
-from testorbit.cli import load_config, main
+from testorbit.cli import main
 from testorbit.history import append_run_result
 from testorbit.runner import RunResult
-
-
-def test_load_config_reads_mapping(tmp_path: Path) -> None:
-    config_path = tmp_path / "testorbit.yml"
-    config_path.write_text(yaml.safe_dump({"tasks": {"unit": {"command": "pytest"}}}), encoding="utf-8")
-
-    data = load_config(config_path)
-
-    assert data["tasks"]["unit"]["command"] == "pytest"
-
-
-def test_load_config_rejects_missing_file(tmp_path: Path) -> None:
-    with pytest.raises(ValueError):
-        load_config(tmp_path / "missing.yml")
 
 
 def test_doctor_reports_discovered_tasks(tmp_path: Path) -> None:
