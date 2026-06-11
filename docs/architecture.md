@@ -14,9 +14,9 @@ Run results expose a small dictionary representation so future history and repor
 
 ## Config Layer
 
-Config loading currently lives in the CLI module while the schema is still small. If validation grows, it should move into a dedicated config module.
+`testorbit.config` owns YAML loading, `tasks` mapping checks, and per-task command validation. The CLI asks this module for a config dictionary, then looks up task names for `list`, `show`, `run`, and `doctor`.
 
-Task discovery is a config lookup, not a filesystem walk. Command handlers ask the config layer for a `tasks` mapping, then `list` / `show` / `run` look up a task by name. The flow is documented in [task-discovery.md](task-discovery.md).
+Task discovery is a config lookup, not a filesystem walk. The flow is documented in [task-discovery.md](task-discovery.md).
 
 ## Near-Term Direction
 
