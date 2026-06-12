@@ -4,6 +4,8 @@ from pathlib import Path
 
 import yaml
 
+DEFAULT_CONFIG_PATH = Path("testorbit.yml")
+
 
 def get_tasks(data: dict) -> dict:
     tasks = data.get("tasks", {})

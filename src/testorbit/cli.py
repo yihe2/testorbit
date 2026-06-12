@@ -6,8 +6,9 @@ from pathlib import Path
 
 from rich.console import Console
 
-from testorbit.config import get_tasks, load_config, validate_tasks
+from testorbit.config import DEFAULT_CONFIG_PATH, get_tasks, load_config, validate_tasks
 from testorbit.history import (
+    DEFAULT_HISTORY_PATH,
     append_run_result,
     export_run_history,
     filter_run_history,
@@ -146,7 +147,7 @@ def add_config_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--config",
         "-c",
-        default="testorbit.yml",
+        default=str(DEFAULT_CONFIG_PATH),
         help="YAML file that defines named test tasks.",
     )
 
@@ -154,7 +155,7 @@ def add_config_argument(parser: argparse.ArgumentParser) -> None:
 def add_history_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--history-path",
-        default="run-history/runs.jsonl",
+        default=str(DEFAULT_HISTORY_PATH),
         help="JSONL file used to store and read task run history.",
     )
 

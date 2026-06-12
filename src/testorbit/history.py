@@ -5,6 +5,8 @@ from pathlib import Path
 
 from testorbit.runner import RunResult
 
+DEFAULT_HISTORY_PATH = Path("run-history/runs.jsonl")
+
 
 def append_run_result(history_path: Path, result: RunResult) -> None:
     history_path.parent.mkdir(parents=True, exist_ok=True)
