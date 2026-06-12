@@ -8,9 +8,8 @@
 
 ## Near-Term Priorities
 
-- add task execution support
-- improve config validation messages
-- introduce basic run history storage
+- keep config, runner, and history modules from leaking into each other
+- start HTML report generation after the list/show flow feels solid
 - keep tests passing after each small feature
 
 ## Guardrails

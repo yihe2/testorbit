@@ -29,6 +29,8 @@ testorbit history --history-path tmp/runs.jsonl --limit 5
 
 The history command prints a small pass/fail summary before listing recent records.
 
+`list` and `show` reuse the same JSONL file. When records exist, those commands print a `last=` / `Last run:` summary for each task instead of making you open the history log first.
+
 Filter the output by status when investigating failures:
 
 ```powershell

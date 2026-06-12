@@ -26,7 +26,7 @@ tasks:
 - the root document must be a mapping
 - `tasks` must be a mapping
 - each task must define a `command`
-- task names should be unique and CLI-friendly
+- task names should be unique and CLI-friendly because `list`, `show`, and `run` look up the same keys
 
 ## Near-Term Extensions
 

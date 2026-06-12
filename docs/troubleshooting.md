@@ -21,4 +21,4 @@ tasks:
 
 ## Task Does Not Appear In `list`
 
-Check that the task is nested under the top-level `tasks` mapping. Task names should be short and easy to type because they are used directly in CLI commands.
+Check that the task is nested under the top-level `tasks` mapping. Task names should be short and easy to type because they are used directly in `list`, `show`, and `run`.

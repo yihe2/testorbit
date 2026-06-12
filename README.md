@@ -114,7 +114,9 @@ Run history notes live in [docs/run-history.md](docs/run-history.md).
 - `testorbit version`
 - `testorbit doctor --config testorbit.example.yml`
 - `testorbit list --config testorbit.example.yml`
+- `testorbit list --config testorbit.example.yml --history-path tmp/runs.jsonl`
 - `testorbit show unit --config testorbit.example.yml`
+- `testorbit show unit --config testorbit.example.yml --history-path tmp/runs.jsonl`
 - `testorbit run unit --dry-run --config testorbit.example.yml`
 - `testorbit run unit --config testorbit.example.yml`
 - `testorbit run unit --config testorbit.example.yml --history-path tmp/runs.jsonl`

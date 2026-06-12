@@ -6,6 +6,7 @@ from pathlib import Path
 
 from rich.console import Console
 
+from testorbit import __version__
 from testorbit.config import DEFAULT_CONFIG_PATH, get_tasks, load_config, validate_tasks
 from testorbit.history import (
     DEFAULT_HISTORY_PATH,
@@ -36,7 +37,7 @@ def format_last_run(record: dict | None, prefix: str = "last=") -> str:
 
 
 def version() -> int:
-    console.print("TestOrbit 0.1.0")
+    console.print(f"TestOrbit {__version__}")
     return 0
 
 
