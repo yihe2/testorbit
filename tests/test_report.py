@@ -1,4 +1,4 @@
-from testorbit.report import ReportSummary
+from testorbit.report import SUMMARY_TEMPLATE, TEMPLATES_DIR, ReportSummary
 
 
 def test_report_summary_from_records() -> None:
@@ -35,3 +35,13 @@ def test_report_summary_handles_empty_history() -> None:
         "failed": 0,
         "records": [],
     }
+
+
+def test_summary_template_scaffold_exists() -> None:
+    template_path = TEMPLATES_DIR / SUMMARY_TEMPLATE
+    text = template_path.read_text(encoding="utf-8")
+
+    assert template_path.exists()
+    assert "TestOrbit Summary" in text
+    assert "{{ passed }}" in text
+    assert "{% for record in records %}" in text

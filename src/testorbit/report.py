@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 from testorbit.history import summarize_run_history
+
+TEMPLATES_DIR = Path(__file__).parent / "templates"
+SUMMARY_TEMPLATE = "summary.html.j2"
 
 
 @dataclass(frozen=True)

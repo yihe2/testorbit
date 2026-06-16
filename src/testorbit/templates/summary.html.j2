@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TestOrbit Report</title>
+  </head>
+  <body>
+    <h1>TestOrbit Summary</h1>
+    <p>{{ passed }} passed, {{ failed }} failed, {{ total }} total</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Status</th>
+          <th>Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in records %}
+        <tr>
+          <td>{{ record.task_name }}</td>
+          <td>{{ record.status }}</td>
+          <td>{{ record.duration_seconds }}s</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="3">No run history found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
