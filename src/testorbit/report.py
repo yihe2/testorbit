@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+
 from testorbit.history import summarize_run_history
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
@@ -33,3 +35,14 @@ class ReportSummary:
             "failed": self.failed,
             "records": list(self.records),
         }
+
+
+def render_html_report(summary: ReportSummary, output_path: Path) -> Path:
+    environment = Environment(
+        loader=FileSystemLoader(TEMPLATES_DIR),
+        autoescape=select_autoescape(["html", "j2"]),
+    )
+    html = environment.get_template(SUMMARY_TEMPLATE).render(**summary.to_dict())
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(html, encoding="utf-8")
+    return output_path
