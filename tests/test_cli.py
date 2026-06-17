@@ -193,3 +193,37 @@ def test_export_history_writes_json_file(tmp_path: Path, capsys: pytest.CaptureF
     assert exit_code == 0
     assert "Exported 1 record(s)" in captured.out
     assert export_path.exists()
+
+
+def test_report_writes_html_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    output_path = tmp_path / "reports" / "summary.html"
+    append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
+
+    exit_code = main(
+        ["report", "--history-path", str(history_path), "--output", str(output_path)]
+    )
+    captured = capsys.readouterr()
+    html = output_path.read_text(encoding="utf-8")
+
+    assert exit_code == 0
+    assert f"Wrote report to {output_path}" in captured.out
+    assert "1 passed, 0 failed, 1 total" in html
+    assert "unit" in html
+
+
+def test_report_filters_records_by_status(tmp_path: Path) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    output_path = tmp_path / "summary.html"
+    append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
+    append_run_result(history_path, RunResult("smoke", "pytest -m smoke", 1, 0.7))
+
+    exit_code = main(
+        ["report", "--history-path", str(history_path), "--output", str(output_path), "--status", "failed"]
+    )
+    html = output_path.read_text(encoding="utf-8")
+
+    assert exit_code == 0
+    assert "0 passed, 1 failed, 1 total" in html
+    assert "smoke" in html
+    assert "unit" not in html

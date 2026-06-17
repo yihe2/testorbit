@@ -1,4 +1,6 @@
-from testorbit.report import SUMMARY_TEMPLATE, TEMPLATES_DIR, ReportSummary
+from pathlib import Path
+
+from testorbit.report import SUMMARY_TEMPLATE, TEMPLATES_DIR, ReportSummary, render_html_report
 
 
 def test_report_summary_from_records() -> None:
@@ -45,3 +47,29 @@ def test_summary_template_scaffold_exists() -> None:
     assert "TestOrbit Summary" in text
     assert "{{ passed }}" in text
     assert "{% for record in records %}" in text
+
+
+def test_render_html_report_writes_summary(tmp_path: Path) -> None:
+    output_path = tmp_path / "summary.html"
+    records = [
+        {"task_name": "unit", "status": "passed", "exit_code": 0, "duration_seconds": 0.42},
+        {"task_name": "smoke", "status": "failed", "exit_code": 1, "duration_seconds": 0.8},
+    ]
+
+    written = render_html_report(ReportSummary.from_records(records), output_path)
+    text = written.read_text(encoding="utf-8")
+
+    assert written == output_path
+    assert "1 passed, 1 failed, 2 total" in text
+    assert "unit" in text
+    assert "smoke" in text
+    assert "failed" in text
+
+
+def test_render_html_report_handles_empty_history(tmp_path: Path) -> None:
+    output_path = tmp_path / "nested" / "summary.html"
+    text = render_html_report(ReportSummary.from_records([]), output_path).read_text(encoding="utf-8")
+
+    assert output_path.exists()
+    assert "0 passed, 0 failed, 0 total" in text
+    assert "No run history found." in text
