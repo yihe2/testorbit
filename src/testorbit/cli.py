@@ -17,6 +17,7 @@ from testorbit.history import (
     read_run_history,
     summarize_run_history,
 )
+from testorbit.report import ReportSummary, render_html_report
 from testorbit.runner import execute_command
 
 console = Console()
@@ -144,6 +145,16 @@ def export_history(history_path: Path, export_path: Path, status: str | None) ->
     return 0
 
 
+def write_report(history_path: Path, output_path: Path, status: str | None) -> int:
+    if status not in {None, "passed", "failed"}:
+        raise ValueError("History status must be 'passed' or 'failed'.")
+
+    records = filter_run_history(read_run_history(history_path), status)
+    render_html_report(ReportSummary.from_records(records), output_path)
+    console.print(f"Wrote report to {output_path}")
+    return 0
+
+
 def add_config_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--config",
@@ -198,6 +209,11 @@ def build_parser() -> argparse.ArgumentParser:
     export_parser.add_argument("--output", required=True, help="JSON file to write.")
     export_parser.add_argument("--status", choices=["passed", "failed"], help="Only export records with this status.")
 
+    report_parser = subparsers.add_parser("report", help="Render an HTML summary of task run history.")
+    add_history_argument(report_parser)
+    report_parser.add_argument("--output", required=True, help="HTML file to write.")
+    report_parser.add_argument("--status", choices=["passed", "failed"], help="Only include records with this status.")
+
     return parser
 
 
@@ -220,6 +236,8 @@ def main(argv: list[str] | None = None) -> int:
             return show_history(Path(args.history_path), args.limit, args.status)
         if args.command == "export-history":
             return export_history(Path(args.history_path), Path(args.output), args.status)
+        if args.command == "report":
+            return write_report(Path(args.history_path), Path(args.output), args.status)
     except ValueError as exc:
         console.print(f"[red]{exc}[/red]")
         return 1
