@@ -17,7 +17,7 @@ from testorbit.history import (
     read_run_history,
     summarize_run_history,
 )
-from testorbit.report import ReportSummary, render_html_report
+from testorbit.report import DEFAULT_EXPORT_PATH, DEFAULT_REPORT_PATH, ReportSummary, render_html_report
 from testorbit.runner import execute_command
 
 console = Console()
@@ -206,12 +206,20 @@ def build_parser() -> argparse.ArgumentParser:
 
     export_parser = subparsers.add_parser("export-history", help="Write filtered run history to a JSON file.")
     add_history_argument(export_parser)
-    export_parser.add_argument("--output", required=True, help="JSON file to write.")
+    export_parser.add_argument(
+        "--output",
+        default=str(DEFAULT_EXPORT_PATH),
+        help="JSON file to write. Defaults to reports/runs.json.",
+    )
     export_parser.add_argument("--status", choices=["passed", "failed"], help="Only export records with this status.")
 
     report_parser = subparsers.add_parser("report", help="Render an HTML summary of task run history.")
     add_history_argument(report_parser)
-    report_parser.add_argument("--output", required=True, help="HTML file to write.")
+    report_parser.add_argument(
+        "--output",
+        default=str(DEFAULT_REPORT_PATH),
+        help="HTML file to write. Defaults to reports/summary.html.",
+    )
     report_parser.add_argument("--status", choices=["passed", "failed"], help="Only include records with this status.")
 
     return parser

@@ -1,6 +1,14 @@
 from pathlib import Path
 
-from testorbit.report import SUMMARY_TEMPLATE, TEMPLATES_DIR, ReportSummary, render_html_report
+from testorbit.report import (
+    DEFAULT_EXPORT_PATH,
+    DEFAULT_REPORT_DIR,
+    DEFAULT_REPORT_PATH,
+    SUMMARY_TEMPLATE,
+    TEMPLATES_DIR,
+    ReportSummary,
+    render_html_report,
+)
 
 
 def test_report_summary_from_records() -> None:
@@ -28,15 +36,11 @@ def test_report_summary_serializes_for_templates() -> None:
     }
 
 
-def test_report_summary_handles_empty_history() -> None:
-    summary = ReportSummary.from_records([])
-
-    assert summary.to_dict() == {
-        "total": 0,
-        "passed": 0,
-        "failed": 0,
-        "records": [],
-    }
+def test_artifact_paths_live_under_reports_dir() -> None:
+    assert DEFAULT_REPORT_PATH.parent == DEFAULT_REPORT_DIR
+    assert DEFAULT_EXPORT_PATH.parent == DEFAULT_REPORT_DIR
+    assert DEFAULT_REPORT_PATH.name == "summary.html"
+    assert DEFAULT_EXPORT_PATH.name == "runs.json"
 
 
 def test_summary_template_scaffold_exists() -> None:

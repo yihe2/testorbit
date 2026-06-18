@@ -8,5 +8,6 @@ build/
 .coverage
 htmlcov/
 .DS_Store
+# Generated HTML and JSON artifacts from `testorbit report` / `export-history`
 reports/
 run-history/

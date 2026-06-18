@@ -9,6 +9,9 @@ from testorbit.history import summarize_run_history
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 SUMMARY_TEMPLATE = "summary.html.j2"
+DEFAULT_REPORT_DIR = Path("reports")
+DEFAULT_REPORT_PATH = DEFAULT_REPORT_DIR / "summary.html"
+DEFAULT_EXPORT_PATH = DEFAULT_REPORT_DIR / "runs.json"
 
 
 @dataclass(frozen=True)
