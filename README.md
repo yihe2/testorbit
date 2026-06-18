@@ -109,6 +109,8 @@ Task discovery notes live in [docs/task-discovery.md](docs/task-discovery.md).
 
 Run history notes live in [docs/run-history.md](docs/run-history.md).
 
+HTML report notes live in [docs/reports.md](docs/reports.md).
+
 ## Early CLI Commands
 
 - `testorbit version`

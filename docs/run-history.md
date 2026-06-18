@@ -43,4 +43,10 @@ Export history as a JSON array:
 testorbit export-history --history-path tmp/runs.jsonl --output reports/runs.json
 ```
 
+Render the same records as HTML:
+
+```powershell
+testorbit report --history-path tmp/runs.jsonl --output reports/summary.html
+```
+
 Dry runs do not write history because they do not execute a task.
