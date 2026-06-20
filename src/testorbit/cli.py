@@ -17,7 +17,7 @@ from testorbit.history import (
     read_run_history,
     summarize_run_history,
 )
-from testorbit.report import DEFAULT_EXPORT_PATH, DEFAULT_REPORT_PATH, ReportSummary, render_html_report
+from testorbit.report import DEFAULT_EXPORT_PATH, DEFAULT_REPORT_PATH, build_report, render_html_report
 from testorbit.runner import execute_command
 
 console = Console()
@@ -109,11 +109,16 @@ def run_task(config: Path, task_name: str, dry_run: bool, history_path: Path) ->
     return result.exit_code
 
 
-def show_history(history_path: Path, limit: int, status: str | None) -> int:
-    if limit < 1:
-        raise ValueError("History limit must be at least 1.")
+def require_status(status: str | None) -> str | None:
     if status not in {None, "passed", "failed"}:
         raise ValueError("History status must be 'passed' or 'failed'.")
+    return status
+
+
+def show_history(history_path: Path, limit: int, status: str | None) -> int:
+    require_status(status)
+    if limit < 1:
+        raise ValueError("History limit must be at least 1.")
 
     records = read_run_history(history_path)
     records = filter_run_history(records, status)
@@ -136,21 +141,14 @@ def show_history(history_path: Path, limit: int, status: str | None) -> int:
 
 
 def export_history(history_path: Path, export_path: Path, status: str | None) -> int:
-    if status not in {None, "passed", "failed"}:
-        raise ValueError("History status must be 'passed' or 'failed'.")
-
-    records = filter_run_history(read_run_history(history_path), status)
+    records = filter_run_history(read_run_history(history_path), require_status(status))
     export_run_history(records, export_path)
     console.print(f"Exported {len(records)} record(s) to {export_path}")
     return 0
 
 
 def write_report(history_path: Path, output_path: Path, status: str | None) -> int:
-    if status not in {None, "passed", "failed"}:
-        raise ValueError("History status must be 'passed' or 'failed'.")
-
-    records = filter_run_history(read_run_history(history_path), status)
-    render_html_report(ReportSummary.from_records(records), output_path)
+    render_html_report(build_report(history_path, require_status(status)), output_path)
     console.print(f"Wrote report to {output_path}")
     return 0
 

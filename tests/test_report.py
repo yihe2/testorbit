@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from testorbit.history import append_run_result
 from testorbit.report import (
     DEFAULT_EXPORT_PATH,
     DEFAULT_REPORT_DIR,
@@ -7,8 +8,10 @@ from testorbit.report import (
     SUMMARY_TEMPLATE,
     TEMPLATES_DIR,
     ReportSummary,
+    build_report,
     render_html_report,
 )
+from testorbit.runner import RunResult
 
 
 def test_report_summary_from_records() -> None:
@@ -77,3 +80,15 @@ def test_render_html_report_handles_empty_history(tmp_path: Path) -> None:
     assert output_path.exists()
     assert "0 passed, 0 failed, 0 total" in text
     assert "No run history found." in text
+
+
+def test_build_report_reads_history_file(tmp_path: Path) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
+    append_run_result(history_path, RunResult("smoke", "pytest -m smoke", 1, 0.7))
+
+    summary = build_report(history_path, status="failed")
+
+    assert summary.total == 1
+    assert summary.failed == 1
+    assert summary.records[0]["task_name"] == "smoke"

@@ -5,7 +5,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from testorbit.history import summarize_run_history
+from testorbit.history import filter_run_history, read_run_history, summarize_run_history
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 SUMMARY_TEMPLATE = "summary.html.j2"
@@ -40,12 +40,20 @@ class ReportSummary:
         }
 
 
-def render_html_report(summary: ReportSummary, output_path: Path) -> Path:
-    environment = Environment(
+def _template_environment() -> Environment:
+    return Environment(
         loader=FileSystemLoader(TEMPLATES_DIR),
         autoescape=select_autoescape(["html", "j2"]),
     )
-    html = environment.get_template(SUMMARY_TEMPLATE).render(**summary.to_dict())
+
+
+def build_report(history_path: Path, status: str | None = None) -> ReportSummary:
+    records = filter_run_history(read_run_history(history_path), status)
+    return ReportSummary.from_records(records)
+
+
+def render_html_report(summary: ReportSummary, output_path: Path) -> Path:
+    html = _template_environment().get_template(SUMMARY_TEMPLATE).render(**summary.to_dict())
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(html, encoding="utf-8")
     return output_path
