@@ -8,8 +8,8 @@
 
 ## Near-Term Priorities
 
-- keep config, runner, and history modules from leaking into each other
-- start HTML report generation after the list/show flow feels solid
+- keep config, runner, history, and report modules from leaking into each other
+- start HTML report styling after the first summary page feels solid
 - keep tests passing after each small feature
 
 ## Guardrails

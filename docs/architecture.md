@@ -18,8 +18,12 @@ Run results expose a small dictionary representation so future history and repor
 
 Task discovery is a config lookup, not a filesystem walk. The flow is documented in [task-discovery.md](task-discovery.md).
 
+## Report Layer
+
+`testorbit.report` turns run-history records into a `ReportSummary` and renders `templates/summary.html.j2` with Jinja2. Default artifacts land in `reports/`, which is gitignored. Usage notes live in [reports.md](reports.md).
+
 ## Near-Term Direction
 
 - capture command output when useful
-- persist run metadata to local history
+- finish HTML report styling and sample artifacts
 - keep subprocess behavior isolated behind runner tests

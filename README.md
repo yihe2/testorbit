@@ -123,5 +123,7 @@ HTML report notes live in [docs/reports.md](docs/reports.md).
 - `testorbit run unit --config testorbit.example.yml`
 - `testorbit run unit --config testorbit.example.yml --history-path tmp/runs.jsonl`
 - `testorbit history --history-path tmp/runs.jsonl`
+- `testorbit export-history --history-path tmp/runs.jsonl`
+- `testorbit report --history-path tmp/runs.jsonl`
 
 `run` returns the same exit code as the configured command, which makes it suitable for scripts and CI steps later in the project.
