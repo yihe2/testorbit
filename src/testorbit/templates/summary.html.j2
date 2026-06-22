@@ -7,6 +7,20 @@
   <body>
     <h1>TestOrbit Summary</h1>
     <p>{{ passed }} passed, {{ failed }} failed, {{ total }} total</p>
+    <section class="cards">
+      <article class="card total">
+        <h2>Total</h2>
+        <p>{{ total }}</p>
+      </article>
+      <article class="card passed">
+        <h2>Passed</h2>
+        <p>{{ passed }}</p>
+      </article>
+      <article class="card failed">
+        <h2>Failed</h2>
+        <p>{{ failed }}</p>
+      </article>
+    </section>
     <table>
       <thead>
         <tr>

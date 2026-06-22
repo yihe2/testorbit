@@ -53,6 +53,8 @@ def test_summary_template_scaffold_exists() -> None:
     assert template_path.exists()
     assert "TestOrbit Summary" in text
     assert "{{ passed }}" in text
+    assert 'class="cards"' in text
+    assert 'class="card passed"' in text
     assert "{% for record in records %}" in text
 
 
@@ -68,6 +70,7 @@ def test_render_html_report_writes_summary(tmp_path: Path) -> None:
 
     assert written == output_path
     assert "1 passed, 1 failed, 2 total" in text
+    assert 'class="card passed"' in text
     assert "unit" in text
     assert "smoke" in text
     assert "failed" in text
