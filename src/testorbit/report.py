@@ -31,11 +31,25 @@ class ReportSummary:
             records=tuple(records),
         )
 
+    @property
+    def pass_percent(self) -> float:
+        if self.total == 0:
+            return 0.0
+        return round(100 * self.passed / self.total, 1)
+
+    @property
+    def fail_percent(self) -> float:
+        if self.total == 0:
+            return 0.0
+        return round(100 - self.pass_percent, 1)
+
     def to_dict(self) -> dict:
         return {
             "total": self.total,
             "passed": self.passed,
             "failed": self.failed,
+            "pass_percent": self.pass_percent,
+            "fail_percent": self.fail_percent,
             "records": list(self.records),
         }
 

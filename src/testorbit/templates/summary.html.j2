@@ -21,6 +21,10 @@
         <p>{{ failed }}</p>
       </article>
     </section>
+    <div class="chart" role="img" aria-label="{{ passed }} passed, {{ failed }} failed">
+      <div class="bar passed" style="width: {{ pass_percent }}%"></div>
+      <div class="bar failed" style="width: {{ fail_percent }}%"></div>
+    </div>
     <table>
       <thead>
         <tr>
