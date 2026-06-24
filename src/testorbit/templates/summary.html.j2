@@ -3,10 +3,79 @@
   <head>
     <meta charset="utf-8">
     <title>TestOrbit Report</title>
+    <style>
+      :root {
+        --bg: #f6f7f9;
+        --card: #ffffff;
+        --text: #1f2933;
+        --muted: #52606d;
+        --passed: #2f9e44;
+        --failed: #e03131;
+        --border: #d9e2ec;
+      }
+      body {
+        margin: 2rem auto;
+        max-width: 880px;
+        font-family: Segoe UI, sans-serif;
+        color: var(--text);
+        background: var(--bg);
+      }
+      h1 { margin-bottom: 0.25rem; }
+      .lede { color: var(--muted); margin-top: 0; }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem;
+      }
+      .card h2 {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .card p {
+        margin: 0.35rem 0 0;
+        font-size: 2rem;
+        font-weight: 700;
+      }
+      .card.passed p { color: var(--passed); }
+      .card.failed p { color: var(--failed); }
+      .chart {
+        display: flex;
+        height: 16px;
+        background: var(--border);
+        border-radius: 999px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+      }
+      .bar.passed { background: var(--passed); }
+      .bar.failed { background: var(--failed); }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--card);
+        border: 1px solid var(--border);
+      }
+      th, td {
+        text-align: left;
+        padding: 0.7rem 0.9rem;
+        border-bottom: 1px solid var(--border);
+      }
+      th { color: var(--muted); font-size: 0.85rem; }
+      tr.passed td:nth-child(2) { color: var(--passed); }
+      tr.failed td:nth-child(2) { color: var(--failed); }
+    </style>
   </head>
   <body>
     <h1>TestOrbit Summary</h1>
-    <p>{{ passed }} passed, {{ failed }} failed, {{ total }} total</p>
+    <p class="lede">{{ passed }} passed, {{ failed }} failed, {{ total }} total</p>
     <section class="cards">
       <article class="card total">
         <h2>Total</h2>
@@ -35,7 +104,7 @@
       </thead>
       <tbody>
         {% for record in records %}
-        <tr>
+        <tr class="{{ record.status }}">
           <td>{{ record.task_name }}</td>
           <td>{{ record.status }}</td>
           <td>{{ record.duration_seconds }}s</td>

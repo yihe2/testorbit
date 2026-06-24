@@ -58,6 +58,7 @@ def test_summary_template_scaffold_exists() -> None:
     assert 'class="cards"' in text
     assert 'class="card passed"' in text
     assert 'class="chart"' in text
+    assert "--passed:" in text
     assert "{% for record in records %}" in text
 
 
