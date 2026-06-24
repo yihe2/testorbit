@@ -207,7 +207,8 @@ def test_report_writes_html_file(tmp_path: Path, capsys: pytest.CaptureFixture[s
     html = output_path.read_text(encoding="utf-8")
 
     assert exit_code == 0
-    assert f"Wrote report to {output_path}" in captured.out
+    assert f"Wrote report to {output_path.resolve()}" in captured.out
+    assert output_path.resolve().as_uri() in captured.out
     assert "1 passed, 0 failed, 1 total" in html
     assert "unit" in html
 

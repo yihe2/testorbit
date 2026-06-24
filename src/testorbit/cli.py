@@ -148,8 +148,10 @@ def export_history(history_path: Path, export_path: Path, status: str | None) ->
 
 
 def write_report(history_path: Path, output_path: Path, status: str | None) -> int:
-    render_html_report(build_report(history_path, require_status(status)), output_path)
-    console.print(f"Wrote report to {output_path}")
+    written = render_html_report(build_report(history_path, require_status(status)), output_path)
+    resolved = written.resolve()
+    console.print(f"Wrote report to {resolved}")
+    console.print(f"Open {resolved.as_uri()}")
     return 0
 
 
