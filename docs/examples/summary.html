@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TestOrbit Report</title>
+  </head>
+  <body>
+    <h1>TestOrbit Summary</h1>
+    <p>1 passed, 1 failed, 2 total</p>
+    <section class="cards">
+      <article class="card total">
+        <h2>Total</h2>
+        <p>2</p>
+      </article>
+      <article class="card passed">
+        <h2>Passed</h2>
+        <p>1</p>
+      </article>
+      <article class="card failed">
+        <h2>Failed</h2>
+        <p>1</p>
+      </article>
+    </section>
+    <div class="chart" role="img" aria-label="1 passed, 1 failed">
+      <div class="bar passed" style="width: 50.0%"></div>
+      <div class="bar failed" style="width: 50.0%"></div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Status</th>
+          <th>Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>unit</td>
+          <td>passed</td>
+          <td>0.42s</td>
+        </tr>
+        <tr>
+          <td>smoke</td>
+          <td>failed</td>
+          <td>0.8s</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
