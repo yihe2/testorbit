@@ -127,3 +127,9 @@ HTML report notes live in [docs/reports.md](docs/reports.md).
 - `testorbit report --history-path tmp/runs.jsonl`
 
 `run` returns the same exit code as the configured command, which makes it suitable for scripts and CI steps later in the project.
+
+## Screenshots
+
+PNG captures of the CLI and HTML report will land here after the summary page styling settles.
+
+Until then, open the committed sample report at [docs/examples/summary.html](docs/examples/summary.html) to see the current cards, pass/fail bar, and run table.
