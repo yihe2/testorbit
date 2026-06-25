@@ -228,3 +228,26 @@ def test_report_filters_records_by_status(tmp_path: Path) -> None:
     assert "0 passed, 1 failed, 1 total" in html
     assert "smoke" in html
     assert "unit" not in html
+
+
+def test_report_end_to_end_from_history_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    history_path = tmp_path / "run-history" / "runs.jsonl"
+    output_path = tmp_path / "reports" / "summary.html"
+    append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
+    append_run_result(history_path, RunResult("api", "pytest tests/api", 1, 1.5))
+
+    exit_code = main(["report", "--history-path", str(history_path), "--output", str(output_path)])
+    captured = capsys.readouterr()
+    html = output_path.read_text(encoding="utf-8")
+
+    assert exit_code == 0
+    assert output_path.exists()
+    assert f"Wrote report to {output_path.resolve()}" in captured.out
+    assert output_path.resolve().as_uri() in captured.out
+    assert "1 passed, 1 failed, 2 total" in html
+    assert 'class="card total"' in html
+    assert "width: 50.0%" in html
+    assert "<td>unit</td>" in html
+    assert "<td>api</td>" in html
+    assert 'tr class="passed"' in html or 'class="passed"' in html
+    assert 'class="failed"' in html
