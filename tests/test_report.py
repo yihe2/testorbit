@@ -25,20 +25,21 @@ def test_report_summary_from_records() -> None:
     assert summary.total == 2
     assert summary.passed == 1
     assert summary.failed == 1
-    assert summary.records == tuple(records)
+    assert summary.records[0]["task_name"] == "unit"
+    assert summary.records[0]["duration_display"] == "0.42s"
+    assert summary.records[1]["duration_display"] == "0.8s"
 
 
 def test_report_summary_serializes_for_templates() -> None:
     records = [{"task_name": "unit", "status": "passed", "exit_code": 0}]
+    payload = ReportSummary.from_records(records).to_dict()
 
-    assert ReportSummary.from_records(records).to_dict() == {
-        "total": 1,
-        "passed": 1,
-        "failed": 0,
-        "pass_percent": 100.0,
-        "fail_percent": 0.0,
-        "records": records,
-    }
+    assert payload["total"] == 1
+    assert payload["passed"] == 1
+    assert payload["failed"] == 0
+    assert payload["pass_percent"] == 100.0
+    assert payload["fail_percent"] == 0.0
+    assert payload["records"][0]["duration_display"] == "—"
 
 
 def test_artifact_paths_live_under_reports_dir() -> None:
@@ -88,6 +89,29 @@ def test_render_html_report_handles_empty_history(tmp_path: Path) -> None:
     assert output_path.exists()
     assert "0 passed, 0 failed, 0 total" in text
     assert "No run history found." in text
+
+
+def test_report_normalizes_missing_fields(tmp_path: Path) -> None:
+    html = render_html_report(
+        ReportSummary.from_records([{"exit_code": 1}]),
+        tmp_path / "summary.html",
+    ).read_text(encoding="utf-8")
+
+    assert "(unknown)" in html
+    assert "failed" in html
+    assert "—" in html
+
+
+def test_report_escapes_task_names(tmp_path: Path) -> None:
+    html = render_html_report(
+        ReportSummary.from_records(
+            [{"task_name": "<script>alert(1)</script>", "status": "passed", "exit_code": 0, "duration_seconds": 0.1}]
+        ),
+        tmp_path / "summary.html",
+    ).read_text(encoding="utf-8")
+
+    assert "<script>alert(1)</script>" not in html
+    assert "&lt;script&gt;" in html
 
 
 def test_build_report_reads_history_file(tmp_path: Path) -> None:

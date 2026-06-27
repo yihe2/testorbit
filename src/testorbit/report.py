@@ -14,6 +14,23 @@ DEFAULT_REPORT_PATH = DEFAULT_REPORT_DIR / "summary.html"
 DEFAULT_EXPORT_PATH = DEFAULT_REPORT_DIR / "runs.json"
 
 
+def _normalize_record(record: dict) -> dict:
+    exit_code = record.get("exit_code", 1)
+    status = record.get("status")
+    if status not in {"passed", "failed"}:
+        status = "passed" if exit_code == 0 else "failed"
+
+    duration = record.get("duration_seconds")
+    duration_display = "—" if duration is None else f"{duration}s"
+
+    return {
+        **record,
+        "task_name": record.get("task_name") or "(unknown)",
+        "status": status,
+        "duration_display": duration_display,
+    }
+
+
 @dataclass(frozen=True)
 class ReportSummary:
     total: int
@@ -23,12 +40,13 @@ class ReportSummary:
 
     @classmethod
     def from_records(cls, records: list[dict]) -> ReportSummary:
-        summary = summarize_run_history(records)
+        normalized = [_normalize_record(record) for record in records]
+        summary = summarize_run_history(normalized)
         return cls(
             total=summary["total"],
             passed=summary["passed"],
             failed=summary["failed"],
-            records=tuple(records),
+            records=tuple(normalized),
         )
 
     @property
