@@ -1,6 +1,6 @@
 # Reports
 
-TestOrbit can turn local run history into a JSON export and a first HTML summary page.
+TestOrbit can turn local run history into a JSON export and an HTML summary page.
 
 Generated files default to the `reports/` directory, which is gitignored:
 
@@ -8,6 +8,8 @@ Generated files default to the `reports/` directory, which is gitignored:
 reports/summary.html
 reports/runs.json
 ```
+
+A committed sample of the current page lives at [examples/summary.html](examples/summary.html).
 
 ## HTML Summary
 
@@ -17,7 +19,15 @@ testorbit report --history-path tmp/runs.jsonl --output tmp/summary.html
 testorbit report --history-path tmp/runs.jsonl --status failed
 ```
 
-The page shows pass/fail totals and one table row per recorded run. Empty history still writes a page with a "No run history found." row.
+The page includes:
+
+- summary cards for total, passed, and failed runs
+- a pass/fail bar chart
+- a table of recorded runs
+
+The CLI prints the resolved report path and a `file://` link so the page can be opened from the terminal.
+
+Empty history still writes a page with a "No run history found." row. Missing task names, statuses, or durations are filled in before rendering.
 
 ## JSON Export
 
