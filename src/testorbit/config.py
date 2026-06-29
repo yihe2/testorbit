@@ -35,3 +35,19 @@ def load_config(config_path: Path) -> dict:
         raise ValueError("Config file must contain a mapping at the top level.")
 
     return data
+
+
+def starter_config() -> dict:
+    return {"tasks": {}}
+
+
+def write_starter_config(config_path: Path) -> Path:
+    if config_path.exists():
+        raise ValueError(f"Config file already exists: {config_path}")
+
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    config_path.write_text(
+        yaml.safe_dump(starter_config(), sort_keys=False),
+        encoding="utf-8",
+    )
+    return config_path

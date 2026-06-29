@@ -7,7 +7,7 @@ from pathlib import Path
 from rich.console import Console
 
 from testorbit import __version__
-from testorbit.config import DEFAULT_CONFIG_PATH, get_tasks, load_config, validate_tasks
+from testorbit.config import DEFAULT_CONFIG_PATH, get_tasks, load_config, validate_tasks, write_starter_config
 from testorbit.history import (
     DEFAULT_HISTORY_PATH,
     append_run_result,
@@ -156,11 +156,8 @@ def write_report(history_path: Path, output_path: Path, status: str | None) -> i
 
 
 def init_config(config_path: Path) -> int:
-    if config_path.exists():
-        raise ValueError(f"Config file already exists: {config_path}")
-
-    config_path.write_text("tasks: {}\n", encoding="utf-8")
-    console.print(f"Created {config_path}")
+    written = write_starter_config(config_path)
+    console.print(f"Created {written}")
     return 0
 
 
