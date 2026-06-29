@@ -155,6 +155,15 @@ def write_report(history_path: Path, output_path: Path, status: str | None) -> i
     return 0
 
 
+def init_config(config_path: Path) -> int:
+    if config_path.exists():
+        raise ValueError(f"Config file already exists: {config_path}")
+
+    config_path.write_text("tasks: {}\n", encoding="utf-8")
+    console.print(f"Created {config_path}")
+    return 0
+
+
 def add_config_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--config",
@@ -180,6 +189,9 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("version", help="Print the installed TestOrbit version.")
+
+    init_parser = subparsers.add_parser("init", help="Create a starter testorbit.yml in the current directory.")
+    add_config_argument(init_parser)
 
     doctor_parser = subparsers.add_parser("doctor", help="Validate a config file and count discovered tasks.")
     add_config_argument(doctor_parser)
@@ -232,6 +244,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "version":
             return version()
+        if args.command == "init":
+            return init_config(Path(args.config))
         if args.command == "doctor":
             return doctor(Path(args.config))
         if args.command == "list":
