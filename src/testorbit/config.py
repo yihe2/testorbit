@@ -38,7 +38,25 @@ def load_config(config_path: Path) -> dict:
 
 
 def starter_config() -> dict:
-    return {"tasks": {}}
+    return {
+        "tasks": {
+            "unit": {
+                "runner": "pytest",
+                "command": "pytest tests",
+                "tags": ["fast", "local"],
+            },
+            "smoke": {
+                "runner": "pytest",
+                "command": "pytest -m smoke",
+                "tags": ["smoke", "focused"],
+            },
+            "api": {
+                "runner": "pytest",
+                "command": "pytest tests/api",
+                "tags": ["api", "integration"],
+            },
+        }
+    }
 
 
 def write_starter_config(config_path: Path) -> Path:
