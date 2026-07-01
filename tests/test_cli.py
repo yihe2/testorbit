@@ -30,6 +30,24 @@ def test_doctor_rejects_task_without_command(tmp_path: Path) -> None:
     assert exit_code == 1
 
 
+def test_init_creates_config_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "project" / "testorbit.yml"
+
+    exit_code = main(["init", "--config", str(config_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert config_path.exists()
+    assert "Created" in captured.out
+
+
+def test_init_rejects_existing_config(tmp_path: Path) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text("tasks: {}\n", encoding="utf-8")
+
+    assert main(["init", "--config", str(config_path)]) == 1
+
+
 def test_list_reports_task_names(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     config_path = tmp_path / "testorbit.yml"
     config_path.write_text(

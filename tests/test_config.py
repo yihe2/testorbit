@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from testorbit.config import get_tasks, load_config, validate_tasks
+from testorbit.config import get_tasks, load_config, starter_config, validate_tasks, write_starter_config
 
 
 def test_load_config_reads_mapping(tmp_path: Path) -> None:
@@ -36,3 +36,28 @@ def test_get_tasks_requires_mapping() -> None:
 def test_validate_tasks_requires_command() -> None:
     with pytest.raises(ValueError, match="must define a command"):
         validate_tasks({"unit": {"runner": "pytest"}})
+
+
+def test_starter_config_includes_pytest_presets() -> None:
+    tasks = get_tasks(starter_config())
+
+    assert set(tasks) == {"unit", "smoke", "api"}
+    validate_tasks(tasks)
+    assert tasks["unit"]["command"] == "pytest tests"
+
+
+def test_write_starter_config_creates_valid_file(tmp_path: Path) -> None:
+    config_path = tmp_path / "nested" / "testorbit.yml"
+    write_starter_config(config_path)
+
+    data = load_config(config_path)
+    validate_tasks(get_tasks(data))
+    assert config_path.exists()
+
+
+def test_write_starter_config_rejects_existing_file(tmp_path: Path) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text("tasks: {}\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="already exists"):
+        write_starter_config(config_path)
