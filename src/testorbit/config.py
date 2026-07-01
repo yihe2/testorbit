@@ -63,9 +63,15 @@ def write_starter_config(config_path: Path) -> Path:
     if config_path.exists():
         raise ValueError(f"Config file already exists: {config_path}")
 
+    data = starter_config()
+    validate_tasks(get_tasks(data))
+
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(
-        yaml.safe_dump(starter_config(), sort_keys=False),
+        yaml.safe_dump(data, sort_keys=False),
         encoding="utf-8",
     )
+
+    loaded = load_config(config_path)
+    validate_tasks(get_tasks(loaded))
     return config_path
