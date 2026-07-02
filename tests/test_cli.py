@@ -38,7 +38,10 @@ def test_init_creates_config_file(tmp_path: Path, capsys: pytest.CaptureFixture[
 
     assert exit_code == 0
     assert config_path.exists()
-    assert "Created" in captured.out
+    assert f"Created {config_path} with 3 task(s)." in captured.out
+    assert "testorbit doctor" in captured.out
+    assert "testorbit list" in captured.out
+    assert "testorbit run unit --dry-run" in captured.out
 
 
 def test_init_rejects_existing_config(tmp_path: Path) -> None:

@@ -157,7 +157,12 @@ def write_report(history_path: Path, output_path: Path, status: str | None) -> i
 
 def init_config(config_path: Path) -> int:
     written = write_starter_config(config_path)
-    console.print(f"Created {written}")
+    tasks = get_tasks(load_config(written))
+    console.print(f"Created {written} with {len(tasks)} task(s).")
+    console.print("Next:")
+    console.print(f"  testorbit doctor --config {written}")
+    console.print(f"  testorbit list --config {written}")
+    console.print(f"  testorbit run unit --dry-run --config {written}")
     return 0
 
 
