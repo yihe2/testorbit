@@ -99,6 +99,8 @@ That keeps your history natural and believable while still reaching the target v
 
 This repo starts as a scaffold plus roadmap. Development should follow the weekly plan in [docs/roadmap.md](docs/roadmap.md) and the commit suggestions in [docs/weekly-commit-plan.md](docs/weekly-commit-plan.md).
 
+For a first local run, see [docs/quickstart.md](docs/quickstart.md).
+
 For early config design, see [docs/config-schema.md](docs/config-schema.md) and the starter sample in `testorbit.example.yml`.
 
 Troubleshooting notes live in [docs/troubleshooting.md](docs/troubleshooting.md).
@@ -113,6 +115,7 @@ HTML report notes live in [docs/reports.md](docs/reports.md).
 
 ## Early CLI Commands
 
+- `testorbit init`
 - `testorbit version`
 - `testorbit doctor --config testorbit.example.yml`
 - `testorbit list --config testorbit.example.yml`
