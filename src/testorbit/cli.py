@@ -155,7 +155,10 @@ def write_report(history_path: Path, output_path: Path, status: str | None) -> i
     return 0
 
 
-def init_config(config_path: Path) -> int:
+def init_config(config_path: Path, force: bool = False) -> int:
+    if config_path.exists() and force:
+        config_path.unlink()
+
     written = write_starter_config(config_path)
     tasks = get_tasks(load_config(written))
     console.print(f"Created {written} with {len(tasks)} task(s).")
@@ -186,14 +189,20 @@ def add_history_argument(parser: argparse.ArgumentParser) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="testorbit",
-        description="Run, inspect, and summarize saved test tasks from one CLI.",
+        description="Initialize a project, then run and summarize saved test tasks.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("version", help="Print the installed TestOrbit version.")
 
     init_parser = subparsers.add_parser("init", help="Create a starter testorbit.yml in the current directory.")
-    add_config_argument(init_parser)
+    init_parser.add_argument(
+        "--config",
+        "-c",
+        default=str(DEFAULT_CONFIG_PATH),
+        help="Path to write the starter config file.",
+    )
+    init_parser.add_argument("--force", action="store_true", help="Overwrite an existing config file.")
 
     doctor_parser = subparsers.add_parser("doctor", help="Validate a config file and count discovered tasks.")
     add_config_argument(doctor_parser)
@@ -247,7 +256,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "version":
             return version()
         if args.command == "init":
-            return init_config(Path(args.config))
+            return init_config(Path(args.config), args.force)
         if args.command == "doctor":
             return doctor(Path(args.config))
         if args.command == "list":

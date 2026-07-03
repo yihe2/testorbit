@@ -10,7 +10,7 @@ testorbit show unit
 testorbit run unit --dry-run
 ```
 
-`init` writes `testorbit.yml` with `unit`, `smoke`, and `api` pytest presets. It refuses to overwrite an existing file unless you pass a different `--config` path.
+`init` writes `testorbit.yml` with `unit`, `smoke`, and `api` pytest presets. It refuses to overwrite an existing file unless you pass `--force` or a different `--config` path.
 
 After a real run, inspect history and render the HTML report:
 

@@ -51,6 +51,16 @@ def test_init_rejects_existing_config(tmp_path: Path) -> None:
     assert main(["init", "--config", str(config_path)]) == 1
 
 
+def test_init_force_overwrites_existing_config(tmp_path: Path) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text("tasks: {}\n", encoding="utf-8")
+
+    exit_code = main(["init", "--config", str(config_path), "--force"])
+
+    assert exit_code == 0
+    assert "unit" in yaml.safe_load(config_path.read_text(encoding="utf-8"))["tasks"]
+
+
 def test_list_reports_task_names(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     config_path = tmp_path / "testorbit.yml"
     config_path.write_text(
