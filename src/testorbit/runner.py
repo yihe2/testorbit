@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shutil
 import subprocess
 import time
 from dataclasses import dataclass
@@ -26,7 +27,22 @@ class RunResult:
         }
 
 
+def command_executable(command: str) -> str:
+    parts = command.strip().split()
+    if not parts:
+        raise ValueError("Task command is empty.")
+    return parts[0]
+
+
+def require_command_executable(command: str) -> str:
+    executable = command_executable(command)
+    if shutil.which(executable) is None:
+        raise ValueError(f"Command not found: {executable}")
+    return executable
+
+
 def execute_command(task_name: str, command: str) -> RunResult:
+    require_command_executable(command)
     started_at = time.perf_counter()
     completed = subprocess.run(command, shell=True, check=False)
     duration_seconds = time.perf_counter() - started_at

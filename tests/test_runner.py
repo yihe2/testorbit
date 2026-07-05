@@ -7,6 +7,7 @@ from testorbit.runner import RunResult, execute_command
 
 def test_execute_command_returns_run_result() -> None:
     with (
+        patch("testorbit.runner.shutil.which", return_value="pytest"),
         patch("testorbit.runner.subprocess.run", return_value=Mock(returncode=0)) as run_command,
         patch("testorbit.runner.time.perf_counter", side_effect=[12.0, 12.34]),
     ):
@@ -17,6 +18,17 @@ def test_execute_command_returns_run_result() -> None:
     assert result.exit_code == 0
     assert result.duration_seconds == pytest.approx(0.34)
     run_command.assert_called_once_with("pytest tests", shell=True, check=False)
+
+
+def test_execute_command_rejects_missing_tool() -> None:
+    with patch("testorbit.runner.shutil.which", return_value=None):
+        with pytest.raises(ValueError, match="Command not found: missing-tool"):
+            execute_command("unit", "missing-tool --help")
+
+
+def test_execute_command_rejects_empty_command() -> None:
+    with pytest.raises(ValueError, match="Task command is empty"):
+        execute_command("unit", "   ")
 
 
 def test_run_result_serializes_for_history() -> None:
