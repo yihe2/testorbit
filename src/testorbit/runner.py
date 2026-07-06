@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import os
+import shlex
 import shutil
 import subprocess
 import time
 from dataclasses import dataclass
+from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -28,7 +31,7 @@ class RunResult:
 
 
 def command_executable(command: str) -> str:
-    parts = command.strip().split()
+    parts = shlex.split(command, posix=os.name != "nt")
     if not parts:
         raise ValueError("Task command is empty.")
     return parts[0]
@@ -36,9 +39,16 @@ def command_executable(command: str) -> str:
 
 def require_command_executable(command: str) -> str:
     executable = command_executable(command)
-    if shutil.which(executable) is None:
+    if os.path.sep in executable or (os.name == "nt" and len(executable) >= 3 and executable[1] == ":"):
+        path = Path(executable)
+        if not path.exists():
+            raise ValueError(f"Command not found: {executable}")
+        return str(path)
+
+    resolved = shutil.which(executable)
+    if resolved is None:
         raise ValueError(f"Command not found: {executable}")
-    return executable
+    return resolved
 
 
 def execute_command(task_name: str, command: str) -> RunResult:

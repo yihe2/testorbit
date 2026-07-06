@@ -1,8 +1,9 @@
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
 
-from testorbit.runner import RunResult, execute_command
+from testorbit.runner import RunResult, execute_command, require_command_executable
 
 
 def test_execute_command_returns_run_result() -> None:
@@ -29,6 +30,21 @@ def test_execute_command_rejects_missing_tool() -> None:
 def test_execute_command_rejects_empty_command() -> None:
     with pytest.raises(ValueError, match="Task command is empty"):
         execute_command("unit", "   ")
+
+
+def test_require_command_executable_accepts_existing_path(tmp_path: Path) -> None:
+    tool = tmp_path / "tools" / "pytest.exe"
+    tool.parent.mkdir()
+    tool.write_text("", encoding="utf-8")
+
+    assert require_command_executable(f'"{tool}" tests') == str(tool)
+
+
+def test_require_command_executable_rejects_missing_path(tmp_path: Path) -> None:
+    missing = tmp_path / "missing-tool.exe"
+
+    with pytest.raises(ValueError, match="Command not found"):
+        require_command_executable(f'"{missing}" --help')
 
 
 def test_run_result_serializes_for_history() -> None:
