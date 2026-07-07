@@ -54,7 +54,16 @@ def require_command_executable(command: str) -> str:
 def execute_command(task_name: str, command: str) -> RunResult:
     require_command_executable(command)
     started_at = time.perf_counter()
-    completed = subprocess.run(command, shell=True, check=False)
+    try:
+        completed = subprocess.run(command, shell=True, check=False)
+    except FileNotFoundError as exc:
+        raise ValueError(f"Command not found: {command_executable(command)}") from exc
+    except PermissionError as exc:
+        raise ValueError(f"Permission denied: {command_executable(command)}") from exc
+    except OSError as exc:
+        detail = exc.strerror or str(exc)
+        raise ValueError(f"Failed to start command '{command_executable(command)}': {detail}") from exc
+
     duration_seconds = time.perf_counter() - started_at
     return RunResult(
         task_name=task_name,

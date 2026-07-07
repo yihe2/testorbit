@@ -63,3 +63,30 @@ def test_run_result_marks_failed_status() -> None:
     result = RunResult(task_name="unit", command="pytest tests", exit_code=1, duration_seconds=0.5)
 
     assert result.status == "failed"
+
+
+def test_execute_command_maps_file_not_found_error() -> None:
+    with (
+        patch("testorbit.runner.shutil.which", return_value="pytest"),
+        patch("testorbit.runner.subprocess.run", side_effect=FileNotFoundError("pytest")),
+    ):
+        with pytest.raises(ValueError, match="Command not found: pytest"):
+            execute_command("unit", "pytest tests")
+
+
+def test_execute_command_maps_permission_error() -> None:
+    with (
+        patch("testorbit.runner.shutil.which", return_value="pytest"),
+        patch("testorbit.runner.subprocess.run", side_effect=PermissionError("pytest")),
+    ):
+        with pytest.raises(ValueError, match="Permission denied: pytest"):
+            execute_command("unit", "pytest tests")
+
+
+def test_execute_command_maps_os_error() -> None:
+    with (
+        patch("testorbit.runner.shutil.which", return_value="pytest"),
+        patch("testorbit.runner.subprocess.run", side_effect=OSError(22, "Invalid argument")),
+    ):
+        with pytest.raises(ValueError, match="Failed to start command 'pytest': Invalid argument"):
+            execute_command("unit", "pytest tests")
