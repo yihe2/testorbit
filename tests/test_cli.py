@@ -182,6 +182,37 @@ def test_run_returns_command_exit_code(tmp_path: Path) -> None:
     assert exit_code == 2
 
 
+def test_run_reports_missing_tool(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    history_path = tmp_path / "runs.jsonl"
+    config_path.write_text(yaml.safe_dump({"tasks": {"unit": {"command": "missing-tool tests"}}}), encoding="utf-8")
+
+    with patch("testorbit.runner.shutil.which", return_value=None):
+        exit_code = main(["run", "unit", "--config", str(config_path), "--history-path", str(history_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "Command not found: missing-tool" in captured.out
+    assert not history_path.exists()
+
+
+def test_run_reports_permission_denied(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    history_path = tmp_path / "runs.jsonl"
+    config_path.write_text(yaml.safe_dump({"tasks": {"unit": {"command": "pytest tests"}}}), encoding="utf-8")
+
+    with (
+        patch("testorbit.runner.shutil.which", return_value="pytest"),
+        patch("testorbit.runner.subprocess.run", side_effect=PermissionError("pytest")),
+    ):
+        exit_code = main(["run", "unit", "--config", str(config_path), "--history-path", str(history_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "Permission denied: pytest" in captured.out
+    assert not history_path.exists()
+
+
 def test_history_reports_recent_records(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     history_path = tmp_path / "runs.jsonl"
     append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
