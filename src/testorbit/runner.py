@@ -30,16 +30,24 @@ class RunResult:
         }
 
 
+def split_command(command: str) -> list[str]:
+    return shlex.split(command, posix=os.name != "nt")
+
+
 def command_executable(command: str) -> str:
-    parts = shlex.split(command, posix=os.name != "nt")
+    parts = split_command(command)
     if not parts:
         raise ValueError("Task command is empty.")
     return parts[0]
 
 
+def _looks_like_filesystem_path(executable: str) -> bool:
+    return os.path.sep in executable or (os.name == "nt" and len(executable) >= 3 and executable[1] == ":")
+
+
 def require_command_executable(command: str) -> str:
     executable = command_executable(command)
-    if os.path.sep in executable or (os.name == "nt" and len(executable) >= 3 and executable[1] == ":"):
+    if _looks_like_filesystem_path(executable):
         path = Path(executable)
         if not path.exists():
             raise ValueError(f"Command not found: {executable}")
@@ -51,18 +59,27 @@ def require_command_executable(command: str) -> str:
     return resolved
 
 
+def _run_subprocess(command: str) -> subprocess.CompletedProcess:
+    return subprocess.run(command, shell=True, check=False)
+
+
+def _startup_error(command: str, exc: OSError) -> ValueError:
+    executable = command_executable(command)
+    if isinstance(exc, FileNotFoundError):
+        return ValueError(f"Command not found: {executable}")
+    if isinstance(exc, PermissionError):
+        return ValueError(f"Permission denied: {executable}")
+    detail = exc.strerror or str(exc)
+    return ValueError(f"Failed to start command '{executable}': {detail}")
+
+
 def execute_command(task_name: str, command: str) -> RunResult:
     require_command_executable(command)
     started_at = time.perf_counter()
     try:
-        completed = subprocess.run(command, shell=True, check=False)
-    except FileNotFoundError as exc:
-        raise ValueError(f"Command not found: {command_executable(command)}") from exc
-    except PermissionError as exc:
-        raise ValueError(f"Permission denied: {command_executable(command)}") from exc
+        completed = _run_subprocess(command)
     except OSError as exc:
-        detail = exc.strerror or str(exc)
-        raise ValueError(f"Failed to start command '{command_executable(command)}': {detail}") from exc
+        raise _startup_error(command, exc) from exc
 
     duration_seconds = time.perf_counter() - started_at
     return RunResult(
