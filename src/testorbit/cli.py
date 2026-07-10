@@ -105,6 +105,10 @@ def run_task(config: Path, task_name: str, dry_run: bool, history_path: Path) ->
     console.print(f"Running task '{task_name}': {command}")
     result = execute_command(task_name, command)
     append_run_result(history_path, result)
+    if result.status == "passed":
+        console.print(f"[green]Task '{task_name}' passed[/green]")
+    else:
+        console.print(f"[red]Task '{task_name}' failed with exit {result.exit_code}[/red]")
     console.print(f"Finished in {result.duration_seconds:.2f}s")
     return result.exit_code
 
