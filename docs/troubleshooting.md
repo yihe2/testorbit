@@ -26,3 +26,17 @@ Check that the task is nested under the top-level `tasks` mapping. Task names sh
 ## Report File Is Missing
 
 `testorbit report` writes to `reports/summary.html` by default. That folder is gitignored, so the file will not show up in git status. Pass `--output` if you want a different path.
+
+## Command Not Found
+
+`testorbit run` checks that the first token of the task command exists before starting a subprocess. Install the tool, add it to PATH, or use an absolute quoted path on Windows:
+
+```yaml
+tasks:
+  unit:
+    command: '"C:\Python311\python.exe" -m pytest tests'
+```
+
+## Permission Denied
+
+The executable was found, but the operating system refused to start it. Confirm the path points at a real program and that you have permission to run it.

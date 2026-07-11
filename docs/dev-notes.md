@@ -9,7 +9,7 @@
 ## Near-Term Priorities
 
 - keep config, runner, history, and report modules from leaking into each other
-- start HTML report styling after the first summary page feels solid
+- add retry flow now that run errors are mapped cleanly
 - keep tests passing after each small feature
 
 ## Guardrails

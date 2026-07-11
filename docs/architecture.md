@@ -8,7 +8,7 @@ TestOrbit is intentionally small, but the code should still keep a few clear bou
 
 ## Runner Layer
 
-`testorbit.runner` owns command execution and returns a structured result. Keeping this separate makes it easier to add timing, output capture, retries, and history storage without making the CLI command handlers too large.
+`testorbit.runner` owns command parsing, executable lookup, subprocess startup, and structured results. Missing tools and OS start failures are mapped to `ValueError` so the CLI can print a clear message without writing history.
 
 Run results expose a small dictionary representation so future history and report features can reuse the same shape.
 
@@ -25,5 +25,5 @@ Task discovery is a config lookup, not a filesystem walk. The flow is documented
 ## Near-Term Direction
 
 - capture command output when useful
-- finish HTML report styling and sample artifacts
+- add retry and flaky-test tracking next
 - keep subprocess behavior isolated behind runner tests
