@@ -39,6 +39,17 @@ def summarize_run_history(records: list[dict]) -> dict:
     }
 
 
+def task_failure_counts(records: list[dict]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for record in records:
+        failed = record.get("status") == "failed" or record.get("exit_code", 1) != 0
+        if not failed:
+            continue
+        task_name = record.get("task_name") or "(unknown)"
+        counts[task_name] = counts.get(task_name, 0) + 1
+    return counts
+
+
 def filter_run_history(records: list[dict], status: str | None = None) -> list[dict]:
     if status is None:
         return records
