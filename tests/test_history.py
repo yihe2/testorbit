@@ -8,6 +8,7 @@ from testorbit.history import (
     latest_run_for_task,
     read_run_history,
     summarize_run_history,
+    task_failure_counts,
 )
 from testorbit.runner import RunResult
 
@@ -91,3 +92,24 @@ def test_export_run_history_writes_json_array(tmp_path: Path) -> None:
     export_run_history(records, export_path)
 
     assert export_path.read_text(encoding="utf-8") == '[\n  {\n    "status": "passed",\n    "task_name": "unit"\n  }\n]'
+
+
+def test_task_failure_counts_ignores_passing_runs() -> None:
+    records = [
+        {"task_name": "unit", "status": "failed", "exit_code": 1},
+        {"task_name": "unit", "status": "passed", "exit_code": 0},
+        {"task_name": "unit", "status": "failed", "exit_code": 1},
+        {"task_name": "smoke", "status": "passed", "exit_code": 0},
+    ]
+
+    assert task_failure_counts(records) == {"unit": 2}
+
+
+def test_task_failure_counts_uses_exit_code_when_status_missing() -> None:
+    records = [
+        {"task_name": "api", "exit_code": 1},
+        {"task_name": "api", "exit_code": 1},
+        {"task_name": "unit", "exit_code": 0},
+    ]
+
+    assert task_failure_counts(records) == {"api": 2}
