@@ -71,6 +71,19 @@
       th { color: var(--muted); font-size: 0.85rem; }
       tr.passed td:nth-child(2) { color: var(--passed); }
       tr.failed td:nth-child(2) { color: var(--failed); }
+      .flaky-hint {
+        background: #fff4e6;
+        border: 1px solid #ffd8a8;
+        border-radius: 8px;
+        padding: 0.8rem 1rem;
+        margin-bottom: 1.5rem;
+      }
+      tr.flaky td:first-child::after {
+        content: " flaky";
+        color: #f08c00;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
     </style>
   </head>
   <body>
@@ -94,6 +107,9 @@
       <div class="bar passed" style="width: {{ pass_percent }}%"></div>
       <div class="bar failed" style="width: {{ fail_percent }}%"></div>
     </div>
+    {% if flaky_tasks %}
+    <p class="flaky-hint">Flaky tasks (2+ failures): {{ flaky_tasks | join(", ") }}</p>
+    {% endif %}
     <table>
       <thead>
         <tr>
@@ -104,7 +120,7 @@
       </thead>
       <tbody>
         {% for record in records %}
-        <tr class="{{ record.status }}">
+        <tr class="{{ record.status }}{% if record.task_name in flaky_tasks %} flaky{% endif %}">
           <td>{{ record.task_name }}</td>
           <td>{{ record.status }}</td>
           <td>{{ record.duration_display }}</td>

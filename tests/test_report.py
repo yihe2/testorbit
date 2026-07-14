@@ -72,6 +72,7 @@ def test_summary_template_scaffold_exists() -> None:
     assert 'class="card passed"' in text
     assert 'class="chart"' in text
     assert "--passed:" in text
+    assert "flaky-hint" in text
     assert "{% for record in records %}" in text
 
 
@@ -101,6 +102,22 @@ def test_render_html_report_handles_empty_history(tmp_path: Path) -> None:
     assert output_path.exists()
     assert "0 passed, 0 failed, 0 total" in text
     assert "No run history found." in text
+    assert "Flaky tasks" not in text
+
+
+def test_render_html_report_surfaces_flaky_hint(tmp_path: Path) -> None:
+    html = render_html_report(
+        ReportSummary.from_records(
+            [
+                {"task_name": "unit", "status": "failed", "exit_code": 1, "duration_seconds": 0.4},
+                {"task_name": "unit", "status": "failed", "exit_code": 1, "duration_seconds": 0.5},
+            ]
+        ),
+        tmp_path / "summary.html",
+    ).read_text(encoding="utf-8")
+
+    assert "Flaky tasks (2+ failures): unit" in html
+    assert "flaky" in html
 
 
 def test_report_normalizes_missing_fields(tmp_path: Path) -> None:
