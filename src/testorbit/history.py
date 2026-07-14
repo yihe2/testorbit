@@ -6,6 +6,7 @@ from pathlib import Path
 from testorbit.runner import RunResult
 
 DEFAULT_HISTORY_PATH = Path("run-history/runs.jsonl")
+DEFAULT_FLAKY_THRESHOLD = 2
 
 
 def append_run_result(history_path: Path, result: RunResult) -> None:
@@ -48,6 +49,14 @@ def task_failure_counts(records: list[dict]) -> dict[str, int]:
         task_name = record.get("task_name") or "(unknown)"
         counts[task_name] = counts.get(task_name, 0) + 1
     return counts
+
+
+def flaky_task_names(records: list[dict], threshold: int = DEFAULT_FLAKY_THRESHOLD) -> list[str]:
+    return sorted(
+        task_name
+        for task_name, failed in task_failure_counts(records).items()
+        if failed >= threshold
+    )
 
 
 def filter_run_history(records: list[dict], status: str | None = None) -> list[dict]:

@@ -9,6 +9,7 @@ from testorbit.history import (
     read_run_history,
     summarize_run_history,
     task_failure_counts,
+    flaky_task_names,
 )
 from testorbit.runner import RunResult
 
@@ -113,3 +114,24 @@ def test_task_failure_counts_uses_exit_code_when_status_missing() -> None:
     ]
 
     assert task_failure_counts(records) == {"api": 2}
+
+
+def test_flaky_task_names_marks_repeated_failures() -> None:
+    records = [
+        {"task_name": "unit", "status": "failed", "exit_code": 1},
+        {"task_name": "unit", "status": "failed", "exit_code": 1},
+        {"task_name": "smoke", "status": "failed", "exit_code": 1},
+        {"task_name": "api", "status": "passed", "exit_code": 0},
+    ]
+
+    assert flaky_task_names(records) == ["unit"]
+
+
+def test_flaky_task_names_respects_threshold() -> None:
+    records = [
+        {"task_name": "smoke", "status": "failed", "exit_code": 1},
+        {"task_name": "smoke", "status": "failed", "exit_code": 1},
+    ]
+
+    assert flaky_task_names(records, threshold=3) == []
+    assert flaky_task_names(records, threshold=2) == ["smoke"]
