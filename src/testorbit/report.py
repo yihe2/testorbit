@@ -5,7 +5,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from testorbit.history import filter_run_history, read_run_history, summarize_run_history
+from testorbit.history import filter_run_history, flaky_task_names, read_run_history, summarize_run_history
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 SUMMARY_TEMPLATE = "summary.html.j2"
@@ -37,6 +37,7 @@ class ReportSummary:
     passed: int
     failed: int
     records: tuple[dict, ...]
+    flaky_tasks: tuple[str, ...]
 
     @classmethod
     def from_records(cls, records: list[dict]) -> ReportSummary:
@@ -47,6 +48,7 @@ class ReportSummary:
             passed=summary["passed"],
             failed=summary["failed"],
             records=tuple(normalized),
+            flaky_tasks=tuple(flaky_task_names(normalized)),
         )
 
     @property
@@ -68,6 +70,8 @@ class ReportSummary:
             "failed": self.failed,
             "pass_percent": self.pass_percent,
             "fail_percent": self.fail_percent,
+            "flaky_tasks": list(self.flaky_tasks),
+            "flaky_count": len(self.flaky_tasks),
             "records": list(self.records),
         }
 

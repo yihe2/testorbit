@@ -28,6 +28,7 @@ def test_report_summary_from_records() -> None:
     assert summary.records[0]["task_name"] == "unit"
     assert summary.records[0]["duration_display"] == "0.42s"
     assert summary.records[1]["duration_display"] == "0.8s"
+    assert summary.flaky_tasks == ()
 
 
 def test_report_summary_serializes_for_templates() -> None:
@@ -39,7 +40,18 @@ def test_report_summary_serializes_for_templates() -> None:
     assert payload["failed"] == 0
     assert payload["pass_percent"] == 100.0
     assert payload["fail_percent"] == 0.0
+    assert payload["flaky_tasks"] == []
+    assert payload["flaky_count"] == 0
     assert payload["records"][0]["duration_display"] == "—"
+
+
+def test_report_summary_includes_flaky_tasks() -> None:
+    records = [
+        {"task_name": "unit", "status": "failed", "exit_code": 1},
+        {"task_name": "unit", "status": "failed", "exit_code": 1},
+    ]
+
+    assert ReportSummary.from_records(records).flaky_tasks == ("unit",)
 
 
 def test_artifact_paths_live_under_reports_dir() -> None:
