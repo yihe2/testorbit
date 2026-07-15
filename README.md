@@ -113,6 +113,8 @@ Run history notes live in [docs/run-history.md](docs/run-history.md).
 
 HTML report notes live in [docs/reports.md](docs/reports.md).
 
+Flaky-task notes live in [docs/flaky.md](docs/flaky.md).
+
 ## Early CLI Commands
 
 - `testorbit init`
