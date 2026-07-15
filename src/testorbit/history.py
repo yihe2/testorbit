@@ -59,6 +59,14 @@ def flaky_task_names(records: list[dict], threshold: int = DEFAULT_FLAKY_THRESHO
     )
 
 
+def task_run_counts(records: list[dict]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for record in records:
+        task_name = record.get("task_name") or "(unknown)"
+        counts[task_name] = counts.get(task_name, 0) + 1
+    return counts
+
+
 def filter_run_history(records: list[dict], status: str | None = None) -> list[dict]:
     if status is None:
         return records

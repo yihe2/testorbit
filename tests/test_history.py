@@ -10,6 +10,7 @@ from testorbit.history import (
     summarize_run_history,
     task_failure_counts,
     flaky_task_names,
+    task_run_counts,
 )
 from testorbit.runner import RunResult
 
@@ -135,3 +136,19 @@ def test_flaky_task_names_respects_threshold() -> None:
 
     assert flaky_task_names(records, threshold=3) == []
     assert flaky_task_names(records, threshold=2) == ["smoke"]
+
+
+def test_task_run_counts_includes_passing_and_failing_runs() -> None:
+    records = [
+        {"task_name": "unit", "status": "passed", "exit_code": 0},
+        {"task_name": "unit", "status": "failed", "exit_code": 1},
+        {"task_name": "smoke", "status": "passed", "exit_code": 0},
+    ]
+
+    assert task_run_counts(records) == {"unit": 2, "smoke": 1}
+
+
+def test_history_aggregation_is_empty_for_no_records() -> None:
+    assert task_run_counts([]) == {}
+    assert task_failure_counts([]) == {}
+    assert flaky_task_names([]) == []
