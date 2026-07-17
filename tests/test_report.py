@@ -70,6 +70,7 @@ def test_summary_template_scaffold_exists() -> None:
     assert "{{ passed }}" in text
     assert 'class="cards"' in text
     assert 'class="card passed"' in text
+    assert 'class="card flaky"' in text
     assert 'class="chart"' in text
     assert "--passed:" in text
     assert "flaky-hint" in text

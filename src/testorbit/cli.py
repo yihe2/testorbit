@@ -13,6 +13,7 @@ from testorbit.history import (
     append_run_result,
     export_run_history,
     filter_run_history,
+    flaky_task_names,
     latest_run_for_task,
     read_run_history,
     summarize_run_history,
@@ -135,6 +136,9 @@ def show_history(history_path: Path, limit: int, status: str | None) -> int:
         f"Runs: {summary['total']} total, "
         f"{summary['passed']} passed, {summary['failed']} failed"
     )
+    flaky = flaky_task_names(records)
+    if flaky:
+        console.print("Flaky: " + ", ".join(flaky))
 
     for record in records[-limit:]:
         console.print(

@@ -228,6 +228,19 @@ def test_history_reports_recent_records(tmp_path: Path, capsys: pytest.CaptureFi
     assert exit_code == 0
     assert "Runs: 1 total, 1 passed, 0 failed" in captured.out
     assert "unit exit=0 duration=0.42s" in captured.out
+    assert "Flaky:" not in captured.out
+
+
+def test_history_reports_flaky_task_names(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    append_run_result(history_path, RunResult("unit", "pytest tests", 1, 0.4))
+    append_run_result(history_path, RunResult("unit", "pytest tests", 1, 0.5))
+
+    exit_code = main(["history", "--history-path", str(history_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "Flaky: unit" in captured.out
 
 
 def test_history_filters_records_by_status(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:

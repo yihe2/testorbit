@@ -24,7 +24,7 @@
       .lede { color: var(--muted); margin-top: 0; }
       .cards {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 1rem;
         margin: 1.5rem 0;
       }
@@ -47,6 +47,7 @@
       }
       .card.passed p { color: var(--passed); }
       .card.failed p { color: var(--failed); }
+      .card.flaky p { color: #f08c00; }
       .chart {
         display: flex;
         height: 16px;
@@ -101,6 +102,10 @@
       <article class="card failed">
         <h2>Failed</h2>
         <p>{{ failed }}</p>
+      </article>
+      <article class="card flaky">
+        <h2>Flaky</h2>
+        <p>{{ flaky_count }}</p>
       </article>
     </section>
     <div class="chart" role="img" aria-label="{{ passed }} passed, {{ failed }} failed">
