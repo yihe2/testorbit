@@ -1,12 +1,27 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from pathlib import Path
 
 from testorbit.runner import RunResult
 
 DEFAULT_HISTORY_PATH = Path("run-history/runs.jsonl")
 DEFAULT_FLAKY_THRESHOLD = 2
+
+
+@dataclass(frozen=True)
+class TaskStats:
+    task_name: str
+    runs: int
+    failed: int
+
+    @property
+    def passed(self) -> int:
+        return self.runs - self.failed
+
+    def is_flaky(self, threshold: int = DEFAULT_FLAKY_THRESHOLD) -> bool:
+        return self.failed >= threshold
 
 
 def append_run_result(history_path: Path, result: RunResult) -> None:
@@ -52,11 +67,7 @@ def task_failure_counts(records: list[dict]) -> dict[str, int]:
 
 
 def flaky_task_names(records: list[dict], threshold: int = DEFAULT_FLAKY_THRESHOLD) -> list[str]:
-    return sorted(
-        task_name
-        for task_name, failed in task_failure_counts(records).items()
-        if failed >= threshold
-    )
+    return [stats.task_name for stats in aggregate_task_stats(records) if stats.is_flaky(threshold)]
 
 
 def task_run_counts(records: list[dict]) -> dict[str, int]:
@@ -65,6 +76,15 @@ def task_run_counts(records: list[dict]) -> dict[str, int]:
         task_name = record.get("task_name") or "(unknown)"
         counts[task_name] = counts.get(task_name, 0) + 1
     return counts
+
+
+def aggregate_task_stats(records: list[dict]) -> list[TaskStats]:
+    runs = task_run_counts(records)
+    failed = task_failure_counts(records)
+    return [
+        TaskStats(task_name=name, runs=runs.get(name, 0), failed=failed.get(name, 0))
+        for name in sorted(set(runs) | set(failed))
+    ]
 
 
 def filter_run_history(records: list[dict], status: str | None = None) -> list[dict]:

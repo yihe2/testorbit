@@ -2,14 +2,16 @@ import json
 from pathlib import Path
 
 from testorbit.history import (
+    TaskStats,
+    aggregate_task_stats,
     append_run_result,
     export_run_history,
     filter_run_history,
+    flaky_task_names,
     latest_run_for_task,
     read_run_history,
     summarize_run_history,
     task_failure_counts,
-    flaky_task_names,
     task_run_counts,
 )
 from testorbit.runner import RunResult
@@ -152,3 +154,20 @@ def test_history_aggregation_is_empty_for_no_records() -> None:
     assert task_run_counts([]) == {}
     assert task_failure_counts([]) == {}
     assert flaky_task_names([]) == []
+    assert aggregate_task_stats([]) == []
+
+
+def test_aggregate_task_stats_combines_runs_and_failures() -> None:
+    records = [
+        {"task_name": "unit", "status": "passed", "exit_code": 0},
+        {"task_name": "unit", "status": "failed", "exit_code": 1},
+        {"task_name": "unit", "status": "failed", "exit_code": 1},
+        {"task_name": "smoke", "status": "passed", "exit_code": 0},
+    ]
+
+    assert aggregate_task_stats(records) == [
+        TaskStats(task_name="smoke", runs=1, failed=0),
+        TaskStats(task_name="unit", runs=3, failed=2),
+    ]
+    assert aggregate_task_stats(records)[1].is_flaky()
+    assert not aggregate_task_stats(records)[0].is_flaky()
