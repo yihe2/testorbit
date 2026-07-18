@@ -171,3 +171,25 @@ def test_aggregate_task_stats_combines_runs_and_failures() -> None:
     ]
     assert aggregate_task_stats(records)[1].is_flaky()
     assert not aggregate_task_stats(records)[0].is_flaky()
+
+
+def test_missing_task_names_are_grouped_as_unknown() -> None:
+    records = [
+        {"exit_code": 1},
+        {"task_name": "", "status": "failed", "exit_code": 1},
+    ]
+
+    assert task_failure_counts(records) == {"(unknown)": 2}
+    assert flaky_task_names(records) == ["(unknown)"]
+
+
+def test_explicit_passed_status_is_not_a_failure() -> None:
+    records = [{"task_name": "unit", "status": "passed", "exit_code": 1}]
+
+    assert summarize_run_history(records)["failed"] == 0
+    assert task_failure_counts(records) == {}
+    assert flaky_task_names(records) == []
+
+
+def test_single_failure_is_not_flaky() -> None:
+    assert flaky_task_names([{"task_name": "unit", "status": "failed", "exit_code": 1}]) == []

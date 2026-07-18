@@ -10,6 +10,13 @@ DEFAULT_HISTORY_PATH = Path("run-history/runs.jsonl")
 DEFAULT_FLAKY_THRESHOLD = 2
 
 
+def _record_failed(record: dict) -> bool:
+    status = record.get("status")
+    if status in {"passed", "failed"}:
+        return status == "failed"
+    return record.get("exit_code", 1) != 0
+
+
 @dataclass(frozen=True)
 class TaskStats:
     task_name: str
@@ -45,7 +52,7 @@ def read_run_history(history_path: Path) -> list[dict]:
 
 def summarize_run_history(records: list[dict]) -> dict:
     total = len(records)
-    failed = sum(1 for record in records if record.get("status") == "failed" or record.get("exit_code", 1) != 0)
+    failed = sum(1 for record in records if _record_failed(record))
     passed = total - failed
 
     return {
@@ -58,7 +65,7 @@ def summarize_run_history(records: list[dict]) -> dict:
 def task_failure_counts(records: list[dict]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for record in records:
-        failed = record.get("status") == "failed" or record.get("exit_code", 1) != 0
+        failed = _record_failed(record)
         if not failed:
             continue
         task_name = record.get("task_name") or "(unknown)"
