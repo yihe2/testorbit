@@ -3,7 +3,15 @@ from pathlib import Path
 import pytest
 import yaml
 
-from testorbit.config import get_tasks, load_config, starter_config, validate_tasks, write_starter_config
+from testorbit.config import (
+    get_quarantine,
+    get_tasks,
+    load_config,
+    starter_config,
+    validate_quarantine,
+    validate_tasks,
+    write_starter_config,
+)
 
 
 def test_load_config_reads_mapping(tmp_path: Path) -> None:
@@ -61,3 +69,23 @@ def test_write_starter_config_rejects_existing_file(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="already exists"):
         write_starter_config(config_path)
+
+
+def test_get_quarantine_defaults_to_empty_list() -> None:
+    assert get_quarantine({"tasks": {"unit": {"command": "pytest"}}}) == []
+
+
+def test_get_quarantine_reads_task_names() -> None:
+    data = {"tasks": {"smoke": {"command": "pytest -m smoke"}}, "quarantine": ["smoke"]}
+
+    assert get_quarantine(data) == ["smoke"]
+
+
+def test_get_quarantine_rejects_non_list() -> None:
+    with pytest.raises(ValueError, match="'quarantine' must be a list"):
+        get_quarantine({"quarantine": "smoke"})
+
+
+def test_validate_quarantine_rejects_unknown_task() -> None:
+    with pytest.raises(ValueError, match="Unknown quarantined task"):
+        validate_quarantine({"unit": {"command": "pytest"}}, ["smoke"])
