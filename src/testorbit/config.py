@@ -24,6 +24,27 @@ def validate_tasks(tasks: dict) -> None:
             raise ValueError(f"Task '{task_name}' must define a command.")
 
 
+def get_quarantine(data: dict) -> list[str]:
+    raw = data.get("quarantine", [])
+    if raw is None:
+        return []
+    if not isinstance(raw, list):
+        raise ValueError("'quarantine' must be a list of task names.")
+
+    names = []
+    for item in raw:
+        if not isinstance(item, str) or not item.strip():
+            raise ValueError("Quarantine entries must be non-empty task names.")
+        names.append(item.strip())
+    return names
+
+
+def validate_quarantine(tasks: dict, quarantine: list[str]) -> None:
+    unknown = [name for name in quarantine if name not in tasks]
+    if unknown:
+        raise ValueError("Unknown quarantined task(s): " + ", ".join(unknown))
+
+
 def load_config(config_path: Path) -> dict:
     if not config_path.exists():
         raise ValueError(f"Config file not found: {config_path}")
