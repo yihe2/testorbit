@@ -7,7 +7,15 @@ from pathlib import Path
 from rich.console import Console
 
 from testorbit import __version__
-from testorbit.config import DEFAULT_CONFIG_PATH, get_tasks, load_config, validate_tasks, write_starter_config
+from testorbit.config import (
+    DEFAULT_CONFIG_PATH,
+    get_quarantine,
+    get_tasks,
+    load_config,
+    validate_quarantine,
+    validate_tasks,
+    write_starter_config,
+)
 from testorbit.history import (
     DEFAULT_HISTORY_PATH,
     append_run_result,
@@ -90,6 +98,8 @@ def show_task(config: Path, task_name: str, history_path: Path) -> int:
 def run_task(config: Path, task_name: str, dry_run: bool, history_path: Path) -> int:
     data = load_config(config)
     tasks = get_tasks(data)
+    quarantine = get_quarantine(data)
+    validate_quarantine(tasks, quarantine)
 
     task = tasks.get(task_name)
     if not isinstance(task, dict):
@@ -98,6 +108,10 @@ def run_task(config: Path, task_name: str, dry_run: bool, history_path: Path) ->
     command = task.get("command")
     if not command:
         raise ValueError(f"Task '{task_name}' must define a command.")
+
+    if task_name in quarantine:
+        console.print(f"[yellow]Skipping quarantined task '{task_name}'[/yellow]")
+        return 0
 
     if dry_run:
         console.print(f"Would run: {command}")
