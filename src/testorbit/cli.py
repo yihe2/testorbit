@@ -55,9 +55,13 @@ def doctor(config: Path) -> int:
     data = load_config(config)
     tasks = get_tasks(data)
     validate_tasks(tasks)
+    quarantine = get_quarantine(data)
+    validate_quarantine(tasks, quarantine)
 
     console.print(f"Config loaded from {config}")
     console.print(f"Discovered {len(tasks)} task(s)")
+    if quarantine:
+        console.print(f"[yellow]Quarantine active: {', '.join(quarantine)}[/yellow]")
     return 0
 
 
