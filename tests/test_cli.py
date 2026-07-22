@@ -218,6 +218,69 @@ def test_run_reports_permission_denied(tmp_path: Path, capsys: pytest.CaptureFix
     assert not history_path.exists()
 
 
+def test_run_skips_quarantined_task(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    history_path = tmp_path / "runs.jsonl"
+    config_path.write_text(
+        yaml.safe_dump({"tasks": {"unit": {"command": "pytest tests"}}, "quarantine": ["unit"]}),
+        encoding="utf-8",
+    )
+
+    with patch("testorbit.cli.execute_command") as run_command:
+        exit_code = main(["run", "unit", "--config", str(config_path), "--history-path", str(history_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    run_command.assert_not_called()
+    assert not history_path.exists()
+    assert "Skipping quarantined task 'unit'" in captured.out
+
+
+def test_run_skips_quarantined_task_on_dry_run(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text(
+        yaml.safe_dump({"tasks": {"unit": {"command": "pytest tests"}}, "quarantine": ["unit"]}),
+        encoding="utf-8",
+    )
+
+    exit_code = main(["run", "unit", "--dry-run", "--config", str(config_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "Skipping quarantined task 'unit'" in captured.out
+    assert "Would run:" not in captured.out
+
+
+def test_run_rejects_unknown_quarantined_task(tmp_path: Path) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text(
+        yaml.safe_dump({"tasks": {"unit": {"command": "pytest tests"}}, "quarantine": ["smoke"]}),
+        encoding="utf-8",
+    )
+
+    assert main(["run", "unit", "--config", str(config_path)]) == 1
+
+
+def test_doctor_warns_when_quarantine_is_active(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text(
+        yaml.safe_dump(
+            {
+                "tasks": {"unit": {"command": "pytest"}, "smoke": {"command": "pytest -m smoke"}},
+                "quarantine": ["smoke"],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = main(["doctor", "--config", str(config_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "Discovered 2 task(s)" in captured.out
+    assert "Quarantine active: smoke" in captured.out
+
+
 def test_history_reports_recent_records(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     history_path = tmp_path / "runs.jsonl"
     append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
