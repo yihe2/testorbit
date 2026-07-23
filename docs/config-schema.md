@@ -12,6 +12,8 @@ tasks:
     tags:
       - fast
       - local
+quarantine:
+  - smoke
 ```
 
 ## Field Notes
@@ -20,6 +22,7 @@ tasks:
 - `runner`: optional hint for adapter selection
 - `command`: executable command string for the task
 - `tags`: optional labels used later for filtering
+- `quarantine`: optional list of task names that `run` should skip
 
 ## Validation Rules
 
@@ -27,6 +30,8 @@ tasks:
 - `tasks` must be a mapping
 - each task must define a `command`
 - task names should be unique and CLI-friendly because `list`, `show`, and `run` look up the same keys
+- `quarantine` must be a list of existing task names when present
+- empty quarantine lists are treated the same as omitting the key
 
 ## Near-Term Extensions
 
