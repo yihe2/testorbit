@@ -17,7 +17,5 @@ tasks:
     tags:
       - api
       - integration
-
-# Uncomment to skip an unstable suite without deleting it:
-# quarantine:
-#   - smoke
+quarantine:
+  - smoke
