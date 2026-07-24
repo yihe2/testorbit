@@ -352,7 +352,7 @@ def test_report_writes_html_file(tmp_path: Path, capsys: pytest.CaptureFixture[s
     assert exit_code == 0
     assert f"Wrote report to {output_path.resolve()}" in captured.out
     assert output_path.resolve().as_uri() in captured.out
-    assert "1 passed, 0 failed, 1 total" in html
+    assert "1 passed, 0 failed across 1 runs" in html
     assert "unit" in html
 
 
@@ -368,7 +368,7 @@ def test_report_filters_records_by_status(tmp_path: Path) -> None:
     html = output_path.read_text(encoding="utf-8")
 
     assert exit_code == 0
-    assert "0 passed, 1 failed, 1 total" in html
+    assert "0 passed, 1 failed across 1 runs" in html
     assert "smoke" in html
     assert "unit" not in html
 
@@ -387,7 +387,7 @@ def test_report_end_to_end_from_history_file(tmp_path: Path, capsys: pytest.Capt
     assert output_path.exists()
     assert f"Wrote report to {output_path.resolve()}" in captured.out
     assert output_path.resolve().as_uri() in captured.out
-    assert "1 passed, 1 failed, 2 total" in html
+    assert "1 passed, 1 failed across 2 runs" in html
     assert 'class="card total"' in html
     assert "width: 50.0%" in html
     assert "<td>unit</td>" in html

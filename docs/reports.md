@@ -21,14 +21,14 @@ testorbit report --history-path tmp/runs.jsonl --status failed
 
 The page includes:
 
-- summary cards for total, passed, and failed runs
+- summary cards for total runs, passed, failed, and flaky tasks
 - a pass/fail bar chart
-- a table of recorded runs
-- a flaky-task hint when a task has failed at least twice
+- a table of recorded runs with a Result column
+- a repeated-failure hint when a task has failed at least twice
 
 The CLI prints the resolved report path and a `file://` link so the page can be opened from the terminal.
 
-Empty history still writes a page with a "No run history found." row. Missing task names, statuses, or durations are filled in before rendering.
+Empty history still writes a page with a "No recorded runs." row. Missing task names, statuses, or durations are filled in before rendering.
 
 See [flaky.md](flaky.md) for how repeated failures are counted.
 

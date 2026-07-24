@@ -88,7 +88,7 @@ def test_render_html_report_writes_summary(tmp_path: Path) -> None:
     text = written.read_text(encoding="utf-8")
 
     assert written == output_path
-    assert "1 passed, 1 failed, 2 total" in text
+    assert "1 passed, 1 failed across 2 runs" in text
     assert 'class="card passed"' in text
     assert "width: 50.0%" in text
     assert "unit" in text
@@ -101,9 +101,9 @@ def test_render_html_report_handles_empty_history(tmp_path: Path) -> None:
     text = render_html_report(ReportSummary.from_records([]), output_path).read_text(encoding="utf-8")
 
     assert output_path.exists()
-    assert "0 passed, 0 failed, 0 total" in text
-    assert "No run history found." in text
-    assert "Flaky tasks" not in text
+    assert "0 passed, 0 failed across 0 runs" in text
+    assert "No recorded runs." in text
+    assert "Repeated failures" not in text
 
 
 def test_render_html_report_surfaces_flaky_hint(tmp_path: Path) -> None:
@@ -117,7 +117,7 @@ def test_render_html_report_surfaces_flaky_hint(tmp_path: Path) -> None:
         tmp_path / "summary.html",
     ).read_text(encoding="utf-8")
 
-    assert "Flaky tasks (2+ failures): unit" in html
+    assert "Repeated failures (2+): unit" in html
     assert "flaky" in html
 
 

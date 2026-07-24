@@ -89,10 +89,10 @@
   </head>
   <body>
     <h1>TestOrbit Summary</h1>
-    <p class="lede">{{ passed }} passed, {{ failed }} failed, {{ total }} total</p>
+    <p class="lede">{{ passed }} passed, {{ failed }} failed across {{ total }} runs</p>
     <section class="cards">
       <article class="card total">
-        <h2>Total</h2>
+        <h2>Total runs</h2>
         <p>{{ total }}</p>
       </article>
       <article class="card passed">
@@ -104,7 +104,7 @@
         <p>{{ failed }}</p>
       </article>
       <article class="card flaky">
-        <h2>Flaky</h2>
+        <h2>Flaky tasks</h2>
         <p>{{ flaky_count }}</p>
       </article>
     </section>
@@ -113,13 +113,13 @@
       <div class="bar failed" style="width: {{ fail_percent }}%"></div>
     </div>
     {% if flaky_tasks %}
-    <p class="flaky-hint">Flaky tasks (2+ failures): {{ flaky_tasks | join(", ") }}</p>
+    <p class="flaky-hint">Repeated failures (2+): {{ flaky_tasks | join(", ") }}</p>
     {% endif %}
     <table>
       <thead>
         <tr>
           <th>Task</th>
-          <th>Status</th>
+          <th>Result</th>
           <th>Duration</th>
         </tr>
       </thead>
@@ -127,12 +127,12 @@
         {% for record in records %}
         <tr class="{{ record.status }}{% if record.task_name in flaky_tasks %} flaky{% endif %}">
           <td>{{ record.task_name }}</td>
-          <td>{{ record.status }}</td>
+          <td>{{ record.status | capitalize }}</td>
           <td>{{ record.duration_display }}</td>
         </tr>
         {% else %}
         <tr>
-          <td colspan="3">No run history found.</td>
+          <td colspan="3">No recorded runs.</td>
         </tr>
         {% endfor %}
       </tbody>
