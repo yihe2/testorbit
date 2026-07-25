@@ -40,3 +40,14 @@ tasks:
 ## Permission Denied
 
 The executable was found, but the operating system refused to start it. Confirm the path points at a real program and that you have permission to run it.
+
+## Task Is Skipped As Quarantined
+
+`run` exits 0 without starting the command when the task name is in the top-level `quarantine` list. Remove the name from that list, or run a different task.
+
+```yaml
+quarantine:
+  - smoke
+```
+
+`doctor`, `list`, and `show` also surface the same list so a leftover skip is easier to notice.

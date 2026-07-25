@@ -67,6 +67,7 @@ def doctor(config: Path) -> int:
 def list_tasks(config: Path, history_path: Path) -> int:
     data = load_config(config)
     tasks = get_tasks(data)
+    quarantine = resolve_quarantine(data, tasks)
 
     if not tasks:
         console.print("No tasks configured.")
@@ -75,16 +76,20 @@ def list_tasks(config: Path, history_path: Path) -> int:
     records = read_run_history(history_path)
     console.print("Configured tasks:")
     for task_name in sorted(tasks):
+        marker = " [quarantined]" if is_quarantined(task_name, quarantine) else ""
         if records:
-            console.print(f"- {task_name} {format_last_run(latest_run_for_task(records, task_name))}")
+            console.print(
+                f"- {task_name}{marker} {format_last_run(latest_run_for_task(records, task_name))}"
+            )
         else:
-            console.print(f"- {task_name}")
+            console.print(f"- {task_name}{marker}")
     return 0
 
 
 def show_task(config: Path, task_name: str, history_path: Path) -> int:
     data = load_config(config)
     tasks = get_tasks(data)
+    quarantine = resolve_quarantine(data, tasks)
 
     task = tasks.get(task_name)
     if not isinstance(task, dict):
@@ -93,6 +98,8 @@ def show_task(config: Path, task_name: str, history_path: Path) -> int:
     console.print(f"Task: {task_name}")
     for key, value in task.items():
         console.print(f"{key}: {value}")
+    if is_quarantined(task_name, quarantine):
+        console.print("[yellow]Status: quarantined[/yellow]")
     last_run = latest_run_for_task(read_run_history(history_path), task_name)
     console.print(format_last_run(last_run, prefix="Last run: "))
     return 0

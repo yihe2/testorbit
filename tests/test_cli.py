@@ -93,6 +93,42 @@ def test_show_reports_task_details(tmp_path: Path, capsys: pytest.CaptureFixture
     assert "runner: pytest" in captured.out
 
 
+def test_list_marks_quarantined_tasks(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text(
+        yaml.safe_dump(
+            {
+                "tasks": {"unit": {"command": "pytest"}, "smoke": {"command": "pytest -m smoke"}},
+                "quarantine": ["smoke"],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = main(["list", "--config", str(config_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "- smoke [quarantined]" in captured.out
+    assert "- unit" in captured.out
+    assert "- unit [quarantined]" not in captured.out
+
+
+def test_show_marks_quarantined_task(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text(
+        yaml.safe_dump({"tasks": {"smoke": {"command": "pytest -m smoke"}}, "quarantine": ["smoke"]}),
+        encoding="utf-8",
+    )
+
+    exit_code = main(["show", "smoke", "--config", str(config_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "Task: smoke" in captured.out
+    assert "Status: quarantined" in captured.out
+
+
 def test_list_includes_last_run_summary(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     config_path = tmp_path / "testorbit.yml"
     history_path = tmp_path / "runs.jsonl"
