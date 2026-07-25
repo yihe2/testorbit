@@ -9,10 +9,10 @@ from rich.console import Console
 from testorbit import __version__
 from testorbit.config import (
     DEFAULT_CONFIG_PATH,
-    get_quarantine,
     get_tasks,
+    is_quarantined,
     load_config,
-    validate_quarantine,
+    resolve_quarantine,
     validate_tasks,
     write_starter_config,
 )
@@ -55,8 +55,7 @@ def doctor(config: Path) -> int:
     data = load_config(config)
     tasks = get_tasks(data)
     validate_tasks(tasks)
-    quarantine = get_quarantine(data)
-    validate_quarantine(tasks, quarantine)
+    quarantine = resolve_quarantine(data, tasks)
 
     console.print(f"Config loaded from {config}")
     console.print(f"Discovered {len(tasks)} task(s)")
@@ -102,8 +101,7 @@ def show_task(config: Path, task_name: str, history_path: Path) -> int:
 def run_task(config: Path, task_name: str, dry_run: bool, history_path: Path) -> int:
     data = load_config(config)
     tasks = get_tasks(data)
-    quarantine = get_quarantine(data)
-    validate_quarantine(tasks, quarantine)
+    quarantine = resolve_quarantine(data, tasks)
 
     task = tasks.get(task_name)
     if not isinstance(task, dict):
@@ -113,7 +111,7 @@ def run_task(config: Path, task_name: str, dry_run: bool, history_path: Path) ->
     if not command:
         raise ValueError(f"Task '{task_name}' must define a command.")
 
-    if task_name in quarantine:
+    if is_quarantined(task_name, quarantine):
         console.print(f"[yellow]Skipping quarantined task '{task_name}'[/yellow]")
         return 0
 

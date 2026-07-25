@@ -4,9 +4,12 @@ import pytest
 import yaml
 
 from testorbit.config import (
+    QUARANTINE_KEY,
     get_quarantine,
     get_tasks,
+    is_quarantined,
     load_config,
+    resolve_quarantine,
     starter_config,
     validate_quarantine,
     validate_tasks,
@@ -89,3 +92,15 @@ def test_get_quarantine_rejects_non_list() -> None:
 def test_validate_quarantine_rejects_unknown_task() -> None:
     with pytest.raises(ValueError, match="Unknown quarantined task"):
         validate_quarantine({"unit": {"command": "pytest"}}, ["smoke"])
+
+
+def test_resolve_quarantine_returns_validated_names() -> None:
+    data = {"tasks": {"smoke": {"command": "pytest -m smoke"}}, QUARANTINE_KEY: ["smoke"]}
+    tasks = get_tasks(data)
+
+    assert resolve_quarantine(data, tasks) == ["smoke"]
+
+
+def test_is_quarantined_matches_listed_names() -> None:
+    assert is_quarantined("smoke", ["smoke"])
+    assert not is_quarantined("unit", ["smoke"])

@@ -5,6 +5,7 @@ from pathlib import Path
 import yaml
 
 DEFAULT_CONFIG_PATH = Path("testorbit.yml")
+QUARANTINE_KEY = "quarantine"
 
 
 def get_tasks(data: dict) -> dict:
@@ -25,7 +26,7 @@ def validate_tasks(tasks: dict) -> None:
 
 
 def get_quarantine(data: dict) -> list[str]:
-    raw = data.get("quarantine", [])
+    raw = data.get(QUARANTINE_KEY, [])
     if raw is None:
         return []
     if not isinstance(raw, list):
@@ -43,6 +44,16 @@ def validate_quarantine(tasks: dict, quarantine: list[str]) -> None:
     unknown = [name for name in quarantine if name not in tasks]
     if unknown:
         raise ValueError("Unknown quarantined task(s): " + ", ".join(unknown))
+
+
+def resolve_quarantine(data: dict, tasks: dict) -> list[str]:
+    quarantine = get_quarantine(data)
+    validate_quarantine(tasks, quarantine)
+    return quarantine
+
+
+def is_quarantined(task_name: str, quarantine: list[str]) -> bool:
+    return task_name in quarantine
 
 
 def load_config(config_path: Path) -> dict:
