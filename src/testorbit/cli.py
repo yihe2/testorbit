@@ -32,6 +32,20 @@ from testorbit.runner import execute_command
 console = Console()
 
 
+def apply_output_mode(*, ci: bool) -> None:
+    global console
+    if ci:
+        console = Console(
+            no_color=True,
+            color_system=None,
+            force_terminal=False,
+            highlight=False,
+            emoji=False,
+        )
+    else:
+        console = Console()
+
+
 def format_last_run(record: dict | None, prefix: str = "last=") -> str:
     if record is None:
         return f"{prefix}none"
@@ -222,6 +236,11 @@ def build_parser() -> argparse.ArgumentParser:
         prog="testorbit",
         description="Initialize a project, then run and summarize saved test tasks.",
     )
+    parser.add_argument(
+        "--ci",
+        action="store_true",
+        help="Use plain output suited to CI logs.",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("version", help="Print the installed TestOrbit version.")
@@ -282,6 +301,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    apply_output_mode(ci=args.ci)
 
     try:
         if args.command == "version":
