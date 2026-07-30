@@ -12,6 +12,15 @@ SUMMARY_TEMPLATE = "summary.html.j2"
 DEFAULT_REPORT_DIR = Path("reports")
 DEFAULT_REPORT_PATH = DEFAULT_REPORT_DIR / "summary.html"
 DEFAULT_EXPORT_PATH = DEFAULT_REPORT_DIR / "runs.json"
+CI_HISTORY_PATH = DEFAULT_REPORT_DIR / "runs.jsonl"
+
+
+def ci_artifact_paths() -> dict[str, Path]:
+    return {
+        "history": CI_HISTORY_PATH,
+        "report": DEFAULT_REPORT_PATH,
+        "export": DEFAULT_EXPORT_PATH,
+    }
 
 
 def _normalize_record(record: dict) -> dict:

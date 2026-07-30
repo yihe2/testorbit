@@ -2,6 +2,7 @@ from pathlib import Path
 
 from testorbit.history import append_run_result
 from testorbit.report import (
+    CI_HISTORY_PATH,
     DEFAULT_EXPORT_PATH,
     DEFAULT_REPORT_DIR,
     DEFAULT_REPORT_PATH,
@@ -9,6 +10,7 @@ from testorbit.report import (
     TEMPLATES_DIR,
     ReportSummary,
     build_report,
+    ci_artifact_paths,
     render_html_report,
 )
 from testorbit.runner import RunResult
@@ -57,8 +59,15 @@ def test_report_summary_includes_flaky_tasks() -> None:
 def test_artifact_paths_live_under_reports_dir() -> None:
     assert DEFAULT_REPORT_PATH.parent == DEFAULT_REPORT_DIR
     assert DEFAULT_EXPORT_PATH.parent == DEFAULT_REPORT_DIR
+    assert CI_HISTORY_PATH.parent == DEFAULT_REPORT_DIR
     assert DEFAULT_REPORT_PATH.name == "summary.html"
     assert DEFAULT_EXPORT_PATH.name == "runs.json"
+    assert CI_HISTORY_PATH.name == "runs.jsonl"
+    assert ci_artifact_paths() == {
+        "history": CI_HISTORY_PATH,
+        "report": DEFAULT_REPORT_PATH,
+        "export": DEFAULT_EXPORT_PATH,
+    }
 
 
 def test_summary_template_scaffold_exists() -> None:

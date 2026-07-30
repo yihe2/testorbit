@@ -24,7 +24,7 @@ jobs:
           pip install testorbit pytest
 
       - name: Run unit task
-        run: testorbit run unit
+        run: testorbit --ci run unit --history-path reports/runs.jsonl
 
       - name: Upload reports
         if: always()
