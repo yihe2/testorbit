@@ -1,7 +1,4 @@
-# Example GitHub Actions workflow for a project that uses TestOrbit.
-# Copy this file to .github/workflows/testorbit.yml and adjust the install step
-# if the package is not published yet.
-name: testorbit
+name: ci
 
 on:
   push:
@@ -18,17 +15,13 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install TestOrbit
+      - name: Install package
         run: |
           python -m pip install --upgrade pip
-          pip install testorbit pytest
+          pip install -e ".[dev]"
 
-      - name: Run unit task
-        run: testorbit --ci run unit --history-path reports/runs.jsonl
-
-      - name: Export JSON history
-        if: always()
-        run: testorbit --ci export-history --history-path reports/runs.jsonl
+      - name: Run tests
+        run: pytest
 
       - name: Render HTML report
         if: always()
@@ -38,5 +31,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: testorbit-reports
+          name: reports
           path: reports/
