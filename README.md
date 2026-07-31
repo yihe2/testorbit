@@ -115,6 +115,8 @@ HTML report notes live in [docs/reports.md](docs/reports.md).
 
 Flaky-task notes live in [docs/flaky.md](docs/flaky.md).
 
+CI setup notes live in [docs/ci.md](docs/ci.md).
+
 ## Early CLI Commands
 
 - `testorbit init`
