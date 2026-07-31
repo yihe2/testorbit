@@ -1,5 +1,8 @@
 # TestOrbit
 
+[![CI](https://github.com/yihe2/testorbit/actions/workflows/ci.yml/badge.svg)](https://github.com/yihe2/testorbit/actions/workflows/ci.yml)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+
 TestOrbit is a lightweight test automation helper for developers who want one clean command to run, filter, retry, and report on their test suites.
 
 This project is scoped as a 4-month GitHub portfolio build from **May 1, 2026** to **August 31, 2026**. The goal is to ship a realistic, polished CLI product with strong documentation, clean commit history, and a visible progression from MVP to release candidate.

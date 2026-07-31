@@ -28,7 +28,7 @@ testorbit --ci report --history-path reports/runs.jsonl
 
 `export-history` and `report` use `if: always()` in the sample so a failing task still publishes JSON and HTML. Upload the `reports/` folder as a workflow artifact.
 
-This repository's own checks live in `.github/workflows/ci.yml`. They install the package, run `pytest`, then render an HTML report from whatever history exists (empty history still writes a page).
+This repository's own checks live in `.github/workflows/ci.yml`. They install the package, run `pytest`, then render an HTML report from whatever history exists (empty history still writes a page). The README CI badge points at that workflow.
 
 ## Local Parity
 
