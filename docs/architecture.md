@@ -20,7 +20,7 @@ Task discovery is a config lookup, not a filesystem walk. The flow is documented
 
 ## Report Layer
 
-`testorbit.report` turns run-history records into a `ReportSummary` and renders `templates/summary.html.j2` with Jinja2. Default artifacts land in `reports/`, which is gitignored. Usage notes live in [reports.md](reports.md).
+`testorbit.report` turns run-history records into a `ReportSummary` and renders `templates/summary.html.j2` with Jinja2. Default artifacts land in `reports/`, which is gitignored. CI jobs can also write history to `reports/runs.jsonl` so one folder upload has the JSONL log, JSON export, and HTML page. Usage notes live in [reports.md](reports.md) and [ci.md](ci.md).
 
 ## Near-Term Direction
 

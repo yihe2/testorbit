@@ -49,4 +49,6 @@ Render the same records as HTML:
 testorbit report --history-path tmp/runs.jsonl --output reports/summary.html
 ```
 
+CI jobs can keep the JSONL file beside those artifacts with `--history-path reports/runs.jsonl`.
+
 Dry runs do not write history because they do not execute a task.

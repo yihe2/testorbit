@@ -135,8 +135,10 @@ CI setup notes live in [docs/ci.md](docs/ci.md).
 - `testorbit history --history-path tmp/runs.jsonl`
 - `testorbit export-history --history-path tmp/runs.jsonl`
 - `testorbit report --history-path tmp/runs.jsonl`
+- `testorbit --ci doctor --config testorbit.example.yml`
+- `testorbit --ci report --history-path reports/runs.jsonl`
 
-`run` returns the same exit code as the configured command, which makes it suitable for scripts and CI steps later in the project.
+`run` returns the same exit code as the configured command. Pass `--ci` in GitHub Actions so logs stay plain; see [docs/ci.md](docs/ci.md).
 
 ## Screenshots
 

@@ -51,3 +51,13 @@ quarantine:
 ```
 
 `doctor`, `list`, and `show` also surface the same list so a leftover skip is easier to notice.
+
+## CI Logs Are Hard To Read
+
+Pass `--ci` before the subcommand so color codes and `file://` open hints are omitted:
+
+```powershell
+testorbit --ci report --history-path reports/runs.jsonl
+```
+
+Copy [examples/github-actions.yml](examples/github-actions.yml) if the workflow itself is missing. The README badge tracks `.github/workflows/ci.yml` in this repository.

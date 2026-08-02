@@ -26,11 +26,13 @@ The page includes:
 - a table of recorded runs with a Result column
 - a repeated-failure hint when a task has failed at least twice
 
-The CLI prints the resolved report path and a `file://` link so the page can be opened from the terminal.
+The CLI prints the resolved report path and a `file://` link so the page can be opened from the terminal. `testorbit --ci report` prints the path only, which is easier to scan in GitHub Actions logs.
 
 Empty history still writes a page with a "No recorded runs." row. Missing task names, statuses, or durations are filled in before rendering.
 
 See [flaky.md](flaky.md) for how repeated failures are counted.
+
+CI jobs should pass `--history-path reports/runs.jsonl` so the JSONL log lands next to `summary.html` and `runs.json`. See [ci.md](ci.md).
 
 ## JSON Export
 

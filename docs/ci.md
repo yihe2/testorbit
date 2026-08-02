@@ -39,4 +39,4 @@ testorbit --ci doctor --config testorbit.example.yml
 testorbit --ci report --history-path reports/runs.jsonl
 ```
 
-`--ci` turns off color and other interactive styling so captured logs match CI output.
+`--ci` turns off color and other interactive styling so captured logs match CI output. It also skips the `file://` open hint on `report` and the "Next:" hints on `init`.
