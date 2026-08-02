@@ -30,10 +30,12 @@ from testorbit.report import DEFAULT_EXPORT_PATH, DEFAULT_REPORT_PATH, build_rep
 from testorbit.runner import execute_command
 
 console = Console()
+_ci_mode = False
 
 
 def apply_output_mode(*, ci: bool) -> None:
-    global console
+    global console, _ci_mode
+    _ci_mode = ci
     if ci:
         console = Console(
             no_color=True,
@@ -41,6 +43,8 @@ def apply_output_mode(*, ci: bool) -> None:
             force_terminal=False,
             highlight=False,
             emoji=False,
+            width=120,
+            soft_wrap=True,
         )
     else:
         console = Console()
@@ -196,7 +200,8 @@ def write_report(history_path: Path, output_path: Path, status: str | None) -> i
     written = render_html_report(build_report(history_path, require_status(status)), output_path)
     resolved = written.resolve()
     console.print(f"Wrote report to {resolved}")
-    console.print(f"Open {resolved.as_uri()}")
+    if not _ci_mode:
+        console.print(f"Open {resolved.as_uri()}")
     return 0
 
 
@@ -207,6 +212,8 @@ def init_config(config_path: Path, force: bool = False) -> int:
     written = write_starter_config(config_path)
     tasks = get_tasks(load_config(written))
     console.print(f"Created {written} with {len(tasks)} task(s).")
+    if _ci_mode:
+        return 0
     console.print("Next:")
     console.print(f"  testorbit doctor --config {written}")
     console.print(f"  testorbit list --config {written}")

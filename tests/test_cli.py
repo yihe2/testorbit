@@ -206,6 +206,33 @@ def test_ci_mode_prints_plain_doctor_output(tmp_path: Path, capsys: pytest.Captu
     assert "\x1b[" not in captured.err
 
 
+def test_ci_mode_omits_report_open_link(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    output_path = tmp_path / "summary.html"
+    append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
+
+    exit_code = main(
+        ["--ci", "report", "--history-path", str(history_path), "--output", str(output_path)]
+    )
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert f"Wrote report to {output_path.resolve()}" in captured.out
+    assert "Open " not in captured.out
+    assert "file://" not in captured.out
+
+
+def test_ci_mode_skips_init_next_steps(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "testorbit.yml"
+
+    exit_code = main(["--ci", "init", "--config", str(config_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert f"Created {config_path} with 3 task(s)." in captured.out
+    assert "Next:" not in captured.out
+
+
 def test_run_dry_run_reports_command(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     config_path = tmp_path / "testorbit.yml"
     config_path.write_text(yaml.safe_dump({"tasks": {"unit": {"command": "pytest tests"}}}), encoding="utf-8")
