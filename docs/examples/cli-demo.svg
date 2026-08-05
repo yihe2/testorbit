@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="220" role="img" aria-label="testorbit doctor and list on the demo project">
+  <rect width="720" height="220" rx="8" fill="#1f2933"/>
+  <circle cx="22" cy="22" r="6" fill="#e03131"/>
+  <circle cx="42" cy="22" r="6" fill="#f08c00"/>
+  <circle cx="62" cy="22" r="6" fill="#2f9e44"/>
+  <text x="88" y="27" fill="#9aa5b1" font-family="Segoe UI, sans-serif" font-size="13">examples/demo</text>
+  <text x="24" y="64" fill="#9aa5b1" font-family="Consolas, monospace" font-size="14">$ testorbit doctor</text>
+  <text x="24" y="88" fill="#e4e7eb" font-family="Consolas, monospace" font-size="14">Config loaded from testorbit.yml</text>
+  <text x="24" y="112" fill="#e4e7eb" font-family="Consolas, monospace" font-size="14">Discovered 3 task(s)</text>
+  <text x="24" y="148" fill="#9aa5b1" font-family="Consolas, monospace" font-size="14">$ testorbit list</text>
+  <text x="24" y="172" fill="#e4e7eb" font-family="Consolas, monospace" font-size="14">Configured tasks:</text>
+  <text x="24" y="196" fill="#e4e7eb" font-family="Consolas, monospace" font-size="14">- api  - smoke  - unit</text>
+</svg>

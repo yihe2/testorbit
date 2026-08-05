@@ -142,6 +142,12 @@ CI setup notes live in [docs/ci.md](docs/ci.md).
 
 ## Screenshots
 
-PNG captures of the CLI and HTML report will land here after the summary page styling settles.
+CLI against the demo project:
 
-Until then, open the committed sample report at [docs/examples/summary.html](docs/examples/summary.html) to see the current cards, pass/fail bar, and run table.
+![testorbit doctor and list](docs/examples/cli-demo.svg)
+
+HTML summary cards:
+
+![TestOrbit HTML summary](docs/examples/report-cards.svg)
+
+Open the committed sample report at [docs/examples/summary.html](docs/examples/summary.html) for the full page, including the run table.
