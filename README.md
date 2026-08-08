@@ -3,11 +3,45 @@
 [![CI](https://github.com/yihe2/testorbit/actions/workflows/ci.yml/badge.svg)](https://github.com/yihe2/testorbit/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
-TestOrbit is a lightweight test automation helper for developers who want one clean command to run, filter, retry, and report on their test suites.
+TestOrbit is a lightweight CLI for named test tasks. Save commands in YAML, run them by alias, keep JSONL history, and render an HTML summary.
 
-This project is scoped as a 4-month GitHub portfolio build from **May 1, 2026** to **August 31, 2026**. The goal is to ship a realistic, polished CLI product with strong documentation, clean commit history, and a visible progression from MVP to release candidate.
+## Install
+
+Python 3.11+ is required.
+
+```powershell
+pip install -e ".[dev]"
+testorbit version
+```
+
+## Try The Demo
+
+The repo includes a tiny shop app under `examples/demo` so you can use the CLI before writing your own config.
+
+```powershell
+cd examples/demo
+testorbit doctor
+testorbit list
+testorbit run unit --dry-run
+```
+
+Full walkthrough: [docs/quickstart.md](docs/quickstart.md).
+
+## Screenshots
+
+CLI against the demo project:
+
+![testorbit doctor and list](docs/examples/cli-demo.svg)
+
+HTML summary cards:
+
+![TestOrbit HTML summary](docs/examples/report-cards.svg)
+
+Open the committed sample report at [docs/examples/summary.html](docs/examples/summary.html) for the full page, including the run table.
 
 ## Project Goal
+
+This project is scoped as a 4-month GitHub portfolio build from **May 1, 2026** to **August 31, 2026**. The goal is to ship a realistic, polished CLI product with strong documentation, clean commit history, and a visible progression from MVP to release candidate.
 
 Build a Python-based CLI tool that makes local test execution easier by:
 
@@ -76,6 +110,7 @@ To keep the project finishable, the MVP focuses on:
 testorbit/
   src/testorbit/
   tests/
+  examples/demo/
   docs/
   README.md
   pyproject.toml
@@ -100,25 +135,17 @@ That keeps your history natural and believable while still reaching the target v
 
 ## Getting Started
 
-This repo starts as a scaffold plus roadmap. Development should follow the weekly plan in [docs/roadmap.md](docs/roadmap.md) and the commit suggestions in [docs/weekly-commit-plan.md](docs/weekly-commit-plan.md).
+Install, then follow [docs/quickstart.md](docs/quickstart.md). Planning notes live in [docs/roadmap.md](docs/roadmap.md) and [docs/weekly-commit-plan.md](docs/weekly-commit-plan.md).
 
-For a first local run, see [docs/quickstart.md](docs/quickstart.md).
-
-For early config design, see [docs/config-schema.md](docs/config-schema.md) and the starter sample in `testorbit.example.yml`.
-
-Troubleshooting notes live in [docs/troubleshooting.md](docs/troubleshooting.md).
-
-Early architecture notes live in [docs/architecture.md](docs/architecture.md).
-
-Task discovery notes live in [docs/task-discovery.md](docs/task-discovery.md).
-
-Run history notes live in [docs/run-history.md](docs/run-history.md).
-
-HTML report notes live in [docs/reports.md](docs/reports.md).
-
-Flaky-task notes live in [docs/flaky.md](docs/flaky.md).
-
-CI setup notes live in [docs/ci.md](docs/ci.md).
+- Config schema: [docs/config-schema.md](docs/config-schema.md) and `testorbit.example.yml`
+- Troubleshooting: [docs/troubleshooting.md](docs/troubleshooting.md)
+- Architecture: [docs/architecture.md](docs/architecture.md)
+- Task discovery: [docs/task-discovery.md](docs/task-discovery.md)
+- Run history: [docs/run-history.md](docs/run-history.md)
+- HTML reports: [docs/reports.md](docs/reports.md)
+- Flaky tasks: [docs/flaky.md](docs/flaky.md)
+- CI setup: [docs/ci.md](docs/ci.md)
+- Quarantine: [docs/quarantine.md](docs/quarantine.md)
 
 ## Early CLI Commands
 
@@ -139,15 +166,3 @@ CI setup notes live in [docs/ci.md](docs/ci.md).
 - `testorbit --ci report --history-path reports/runs.jsonl`
 
 `run` returns the same exit code as the configured command. Pass `--ci` in GitHub Actions so logs stay plain; see [docs/ci.md](docs/ci.md).
-
-## Screenshots
-
-CLI against the demo project:
-
-![testorbit doctor and list](docs/examples/cli-demo.svg)
-
-HTML summary cards:
-
-![TestOrbit HTML summary](docs/examples/report-cards.svg)
-
-Open the committed sample report at [docs/examples/summary.html](docs/examples/summary.html) for the full page, including the run table.
