@@ -135,7 +135,7 @@ That keeps your history natural and believable while still reaching the target v
 
 ## Getting Started
 
-Install, then follow [docs/quickstart.md](docs/quickstart.md). Planning notes live in [docs/roadmap.md](docs/roadmap.md) and [docs/weekly-commit-plan.md](docs/weekly-commit-plan.md).
+Install, then follow [docs/quickstart.md](docs/quickstart.md). After a clone, [docs/setup.md](docs/setup.md) is the verification checklist. Planning notes live in [docs/roadmap.md](docs/roadmap.md) and [docs/weekly-commit-plan.md](docs/weekly-commit-plan.md).
 
 - Config schema: [docs/config-schema.md](docs/config-schema.md) and `testorbit.example.yml`
 - Troubleshooting: [docs/troubleshooting.md](docs/troubleshooting.md)
