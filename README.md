@@ -66,23 +66,24 @@ To keep the project finishable, the MVP focuses on:
 
 ## Final Feature Scope
 
-### Must Ship
+### Shipped
 
 - CLI entrypoint: `testorbit`
 - YAML config file support
 - named test tasks such as `smoke`, `unit`, `api`
-- include/exclude filters
-- failed-test retry flow
 - run history stored locally
 - JSON export
 - HTML report generation
 - GitHub Actions sample workflow
+- flaky-task hints
+- quarantine list support
+- demo project under `examples/demo`
 - unit tests for the core orchestration logic
 
-### Nice To Have If Time Remains
+### Still Open
 
-- flaky-test tagging
-- quarantine list support
+- include/exclude filters
+- failed-test retry flow
 - duration trend summaries
 - adapter for `npm test` / `jest`
 - colored terminal output themes
@@ -139,6 +140,7 @@ Install, then follow [docs/quickstart.md](docs/quickstart.md). After a clone, [d
 
 - Config schema: [docs/config-schema.md](docs/config-schema.md) and `testorbit.example.yml`
 - Troubleshooting: [docs/troubleshooting.md](docs/troubleshooting.md)
+- Docs index: [docs/README.md](docs/README.md)
 - Architecture: [docs/architecture.md](docs/architecture.md)
 - Task discovery: [docs/task-discovery.md](docs/task-discovery.md)
 - Run history: [docs/run-history.md](docs/run-history.md)
@@ -147,7 +149,7 @@ Install, then follow [docs/quickstart.md](docs/quickstart.md). After a clone, [d
 - CI setup: [docs/ci.md](docs/ci.md)
 - Quarantine: [docs/quarantine.md](docs/quarantine.md)
 
-## Early CLI Commands
+## CLI Commands
 
 - `testorbit init`
 - `testorbit version`

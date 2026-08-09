@@ -24,6 +24,6 @@ Task discovery is a config lookup, not a filesystem walk. The flow is documented
 
 ## Near-Term Direction
 
-- capture command output when useful
-- add retry and flaky-test tracking next
+- add retry and include/exclude filters if time remains
+- keep the demo project as the onboarding path
 - keep subprocess behavior isolated behind runner tests

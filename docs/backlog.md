@@ -9,17 +9,17 @@ This backlog captures the first set of product questions and candidate tasks for
 - what metadata is useful enough to store after each run
 - how much reporting is needed for the MVP
 
-## MVP Backlog
+## Shipped
 
-- define config schema for named tasks
-- support a `doctor` command for config validation
-- add a `run` command for task execution
-- record run status, duration, and command used
-- generate JSON summaries before HTML reports
-
-## Nice-To-Have Backlog
-
-- flaky-test heuristics
-- quarantine list support
+- named task config and `doctor`
+- `run` with history, JSON export, and HTML reports
 - GitHub Actions example workflow
+- flaky-task heuristics
+- quarantine list support
+- demo project under `examples/demo`
+
+## Still Open
+
+- retries at the task or failed-test level
+- include/exclude filters
 - optional secondary adapter for JavaScript test commands
