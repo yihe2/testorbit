@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-from pathlib import Path
-
-import yaml
+from testorbit.adapters import build_task_command
 
 DEFAULT_CONFIG_PATH = Path("testorbit.yml")
 QUARANTINE_KEY = "quarantine"
@@ -21,8 +19,7 @@ def validate_tasks(tasks: dict) -> None:
     for task_name, task in tasks.items():
         if not isinstance(task, dict):
             raise ValueError(f"Task '{task_name}' must be a mapping.")
-        if not task.get("command"):
-            raise ValueError(f"Task '{task_name}' must define a command.")
+        build_task_command(task, task_name)
 
 
 def get_quarantine(data: dict) -> list[str]:

@@ -46,7 +46,7 @@ def test_get_tasks_requires_mapping() -> None:
 
 def test_validate_tasks_requires_command() -> None:
     with pytest.raises(ValueError, match="must define a command"):
-        validate_tasks({"unit": {"runner": "pytest"}})
+        validate_tasks({"unit": {"tags": ["fast"]}})
 
 
 def test_starter_config_includes_pytest_presets() -> None:
