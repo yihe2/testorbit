@@ -49,6 +49,10 @@ def test_validate_tasks_requires_command() -> None:
         validate_tasks({"unit": {"tags": ["fast"]}})
 
 
+def test_validate_tasks_allows_known_runner_without_command() -> None:
+    validate_tasks({"js": {"runner": "npm"}})
+
+
 def test_starter_config_includes_pytest_presets() -> None:
     tasks = get_tasks(starter_config())
 
