@@ -13,6 +13,7 @@ from testorbit.config import (
     is_quarantined,
     load_config,
     resolve_quarantine,
+    task_command,
     validate_tasks,
     write_starter_config,
 )
@@ -132,9 +133,7 @@ def run_task(config: Path, task_name: str, dry_run: bool, history_path: Path) ->
     if not isinstance(task, dict):
         raise ValueError(f"Task not found: {task_name}")
 
-    command = task.get("command")
-    if not command:
-        raise ValueError(f"Task '{task_name}' must define a command.")
+    command = task_command(task, task_name)
 
     if is_quarantined(task_name, quarantine):
         console.print(f"[yellow]Skipping quarantined task '{task_name}'[/yellow]")

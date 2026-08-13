@@ -21,8 +21,14 @@ def validate_tasks(tasks: dict) -> None:
     for task_name, task in tasks.items():
         if not isinstance(task, dict):
             raise ValueError(f"Task '{task_name}' must be a mapping.")
-        if not task.get("command"):
-            raise ValueError(f"Task '{task_name}' must define a command.")
+        task_command(task, task_name)
+
+
+def task_command(task: dict, task_name: str) -> str:
+    command = task.get("command")
+    if not isinstance(command, str) or not command.strip():
+        raise ValueError(f"Task '{task_name}' must define a command.")
+    return command.strip()
 
 
 def get_quarantine(data: dict) -> list[str]:

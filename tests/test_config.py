@@ -11,6 +11,7 @@ from testorbit.config import (
     load_config,
     resolve_quarantine,
     starter_config,
+    task_command,
     validate_quarantine,
     validate_tasks,
     write_starter_config,
@@ -47,6 +48,10 @@ def test_get_tasks_requires_mapping() -> None:
 def test_validate_tasks_requires_command() -> None:
     with pytest.raises(ValueError, match="must define a command"):
         validate_tasks({"unit": {"tags": ["fast"]}})
+
+
+def test_task_command_strips_whitespace() -> None:
+    assert task_command({"command": "  pytest tests  "}, "unit") == "pytest tests"
 
 
 def test_starter_config_includes_pytest_presets() -> None:
