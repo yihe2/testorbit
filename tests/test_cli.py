@@ -244,17 +244,6 @@ def test_run_dry_run_reports_command(tmp_path: Path, capsys: pytest.CaptureFixtu
     assert "Would run: pytest tests" in captured.out
 
 
-def test_run_dry_run_uses_npm_runner_default(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    config_path = tmp_path / "testorbit.yml"
-    config_path.write_text(yaml.safe_dump({"tasks": {"js": {"runner": "npm"}}}), encoding="utf-8")
-
-    exit_code = main(["run", "js", "--dry-run", "--config", str(config_path)])
-    captured = capsys.readouterr()
-
-    assert exit_code == 0
-    assert "Would run: npm test" in captured.out
-
-
 def test_run_executes_configured_command(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     config_path = tmp_path / "testorbit.yml"
     history_path = tmp_path / "runs.jsonl"

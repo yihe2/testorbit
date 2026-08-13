@@ -7,7 +7,6 @@ from pathlib import Path
 from rich.console import Console
 
 from testorbit import __version__
-from testorbit.adapters import build_task_command
 from testorbit.config import (
     DEFAULT_CONFIG_PATH,
     get_tasks,
@@ -133,7 +132,9 @@ def run_task(config: Path, task_name: str, dry_run: bool, history_path: Path) ->
     if not isinstance(task, dict):
         raise ValueError(f"Task not found: {task_name}")
 
-    command = build_task_command(task, task_name)
+    command = task.get("command")
+    if not command:
+        raise ValueError(f"Task '{task_name}' must define a command.")
 
     if is_quarantined(task_name, quarantine):
         console.print(f"[yellow]Skipping quarantined task '{task_name}'[/yellow]")
