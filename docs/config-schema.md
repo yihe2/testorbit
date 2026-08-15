@@ -19,8 +19,8 @@ quarantine:
 ## Field Notes
 
 - `tasks`: mapping of task name to task definition
-- `runner`: optional hint for adapter selection
-- `command`: executable command string for the task
+- `runner`: optional hint for humans and docs, ignored at execution time
+- `command`: required executable command string for the task
 - `tags`: optional labels used later for filtering
 - `quarantine`: optional list of task names that `run` should skip
 
@@ -34,6 +34,8 @@ quarantine:
 - empty quarantine lists are treated the same as omitting the key
 
 ## Near-Term Extensions
+
+These are out of the 1.0 cut if they are not already implemented:
 
 - `default_args`
 - `working_directory`

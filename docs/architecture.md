@@ -14,9 +14,11 @@ Run results expose a small dictionary representation so future history and repor
 
 ## Config Layer
 
-`testorbit.config` owns YAML loading, `tasks` mapping checks, and per-task command validation. The CLI asks this module for a config dictionary, then looks up task names for `list`, `show`, `run`, and `doctor`.
+`testorbit.config` owns YAML loading, `tasks` mapping checks, and per-task command lookup via `task_command`. The CLI asks this module for a config dictionary, then looks up task names for `list`, `show`, `run`, and `doctor`.
 
 Task discovery is a config lookup, not a filesystem walk. The flow is documented in [task-discovery.md](task-discovery.md).
+
+`command` is what executes. `runner` is an optional label only. A Week 16 spike that defaulted commands from `runner: npm` was cut; see [adapters.md](adapters.md).
 
 ## Report Layer
 
@@ -24,6 +26,6 @@ Task discovery is a config lookup, not a filesystem walk. The flow is documented
 
 ## Near-Term Direction
 
-- add retry and include/exclude filters if time remains
-- keep the demo project as the onboarding path
+- bug-fix and coverage pass in Week 17
+- cut `v1.0.0` by August 31
 - keep subprocess behavior isolated behind runner tests

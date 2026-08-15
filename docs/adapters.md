@@ -19,4 +19,4 @@ Reasons:
 
 ## 1.0 Shape
 
-Keep the shell runner. Treat `runner` as an optional hint in YAML, not as a command factory. Tasks must define `command`.
+Keep the shell runner. Treat `runner` as an optional hint in YAML, not as a command factory. Tasks must define `command`. The spike mapping was removed after this decision so the 1.0 path stays command-only.
