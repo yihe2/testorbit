@@ -85,7 +85,6 @@ To keep the project finishable, the MVP focuses on:
 - include/exclude filters
 - failed-test retry flow
 - duration trend summaries
-- adapter for `npm test` / `jest`
 - colored terminal output themes
 
 ### Explicitly Out Of Scope
@@ -95,6 +94,7 @@ To keep the project finishable, the MVP focuses on:
 - browser UI app
 - parallel distributed execution across machines
 - enterprise test management integrations
+- a first-class `npm` / `jest` adapter (use `command: npm test` instead; see [docs/adapters.md](docs/adapters.md))
 
 ## Recommended Tech Stack
 
@@ -142,6 +142,7 @@ Install, then follow [docs/quickstart.md](docs/quickstart.md). After a clone, [d
 - Troubleshooting: [docs/troubleshooting.md](docs/troubleshooting.md)
 - Docs index: [docs/README.md](docs/README.md)
 - Architecture: [docs/architecture.md](docs/architecture.md)
+- Adapter spike (cut): [docs/adapters.md](docs/adapters.md)
 - Task discovery: [docs/task-discovery.md](docs/task-discovery.md)
 - Run history: [docs/run-history.md](docs/run-history.md)
 - HTML reports: [docs/reports.md](docs/reports.md)

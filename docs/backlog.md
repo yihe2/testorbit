@@ -22,4 +22,7 @@ This backlog captures the first set of product questions and candidate tasks for
 
 - retries at the task or failed-test level
 - include/exclude filters
+
+## Cut For 1.0
+
 - optional secondary adapter for JavaScript test commands

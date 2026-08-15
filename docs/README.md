@@ -16,6 +16,7 @@ Start here after cloning:
 - [quarantine.md](quarantine.md)
 - [ci.md](ci.md)
 - [architecture.md](architecture.md)
+- [adapters.md](adapters.md)
 
 ## Planning
 
