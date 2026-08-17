@@ -66,8 +66,11 @@ def load_config(config_path: Path) -> dict:
     if not config_path.exists():
         raise ValueError(f"Config file not found: {config_path}")
 
-    with config_path.open("r", encoding="utf-8") as handle:
-        data = yaml.safe_load(handle) or {}
+    try:
+        with config_path.open("r", encoding="utf-8") as handle:
+            data = yaml.safe_load(handle) or {}
+    except yaml.YAMLError as exc:
+        raise ValueError(f"Invalid YAML in {config_path}.") from exc
 
     if not isinstance(data, dict):
         raise ValueError("Config file must contain a mapping at the top level.")

@@ -40,6 +40,14 @@ def test_load_config_rejects_non_mapping(tmp_path: Path) -> None:
         load_config(config_path)
 
 
+def test_load_config_rejects_invalid_yaml(tmp_path: Path) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text("tasks: [\n  - unit\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Invalid YAML"):
+        load_config(config_path)
+
+
 def test_get_tasks_requires_mapping() -> None:
     with pytest.raises(ValueError, match="'tasks' must be a mapping"):
         get_tasks({"tasks": ["unit"]})

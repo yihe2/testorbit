@@ -30,6 +30,19 @@ def test_doctor_rejects_task_without_command(tmp_path: Path) -> None:
     assert exit_code == 1
 
 
+def test_doctor_reports_invalid_yaml_without_traceback(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    config_path = tmp_path / "testorbit.yml"
+    config_path.write_text("tasks: [\n  - unit\n", encoding="utf-8")
+
+    exit_code = main(["doctor", "--config", str(config_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "Invalid YAML" in captured.out
+    assert "Traceback" not in captured.out
+    assert "Traceback" not in captured.err
+
+
 def test_init_creates_config_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     config_path = tmp_path / "project" / "testorbit.yml"
 
