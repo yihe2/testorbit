@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from testorbit.history import (
     TaskStats,
     aggregate_task_stats,
@@ -46,6 +48,26 @@ def test_read_run_history_returns_records(tmp_path: Path) -> None:
 
 def test_read_run_history_returns_empty_list_for_missing_file(tmp_path: Path) -> None:
     assert read_run_history(tmp_path / "missing.jsonl") == []
+
+
+def test_read_run_history_skips_blank_lines(tmp_path: Path) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    history_path.write_text(
+        '{"task_name": "unit", "status": "passed"}\n\n{"task_name": "smoke", "status": "failed"}\n',
+        encoding="utf-8",
+    )
+
+    records = read_run_history(history_path)
+
+    assert [record["task_name"] for record in records] == ["unit", "smoke"]
+
+
+def test_read_run_history_rejects_invalid_jsonl(tmp_path: Path) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    history_path.write_text('{"task_name": "unit"}\nnot-json\n', encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Invalid JSONL"):
+        read_run_history(history_path)
 
 
 def test_summarize_run_history_counts_passed_and_failed_runs() -> None:

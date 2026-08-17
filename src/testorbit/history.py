@@ -44,9 +44,13 @@ def read_run_history(history_path: Path) -> list[dict]:
         return []
 
     records = []
-    for line in history_path.read_text(encoding="utf-8").splitlines():
-        if line.strip():
+    for line_number, line in enumerate(history_path.read_text(encoding="utf-8").splitlines(), start=1):
+        if not line.strip():
+            continue
+        try:
             records.append(json.loads(line))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Invalid JSONL in {history_path} on line {line_number}.") from exc
     return records
 
 
