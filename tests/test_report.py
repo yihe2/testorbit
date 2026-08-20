@@ -81,6 +81,8 @@ def test_summary_template_scaffold_exists() -> None:
     assert 'class="card passed"' in text
     assert 'class="card flaky"' in text
     assert 'class="chart"' in text
+    assert "table-layout: fixed" in text
+    assert "word-break: break-word" in text
     assert "--passed:" in text
     assert "flaky-hint" in text
     assert "{% for record in records %}" in text
@@ -113,6 +115,7 @@ def test_render_html_report_handles_empty_history(tmp_path: Path) -> None:
     assert "0 passed, 0 failed across 0 runs" in text
     assert "No recorded runs." in text
     assert "Repeated failures" not in text
+    assert 'role="img"' not in text
 
 
 def test_render_html_report_surfaces_flaky_hint(tmp_path: Path) -> None:

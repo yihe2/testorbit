@@ -28,6 +28,9 @@
         gap: 1rem;
         margin: 1.5rem 0;
       }
+      @media (max-width: 720px) {
+        .cards { grid-template-columns: repeat(2, 1fr); }
+      }
       .card {
         background: var(--card);
         border: 1px solid var(--border);
@@ -63,13 +66,16 @@
         border-collapse: collapse;
         background: var(--card);
         border: 1px solid var(--border);
+        table-layout: fixed;
       }
       th, td {
         text-align: left;
         padding: 0.7rem 0.9rem;
         border-bottom: 1px solid var(--border);
+        word-break: break-word;
       }
       th { color: var(--muted); font-size: 0.85rem; }
+      tr:last-child td { border-bottom: none; }
       tr.passed td:nth-child(2) { color: var(--passed); }
       tr.failed td:nth-child(2) { color: var(--failed); }
       .flaky-hint {
@@ -108,10 +114,12 @@
         <p>{{ flaky_count }}</p>
       </article>
     </section>
+    {% if total %}
     <div class="chart" role="img" aria-label="{{ passed }} passed, {{ failed }} failed">
       <div class="bar passed" style="width: {{ pass_percent }}%"></div>
       <div class="bar failed" style="width: {{ fail_percent }}%"></div>
     </div>
+    {% endif %}
     {% if flaky_tasks %}
     <p class="flaky-hint">Repeated failures (2+): {{ flaky_tasks | join(", ") }}</p>
     {% endif %}
