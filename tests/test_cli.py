@@ -393,6 +393,17 @@ def test_history_reports_recent_records(tmp_path: Path, capsys: pytest.CaptureFi
     assert "Flaky:" not in captured.out
 
 
+def test_history_formats_missing_duration(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    history_path.write_text('{"task_name": "unit", "exit_code": 0, "status": "passed"}\n', encoding="utf-8")
+
+    exit_code = main(["history", "--history-path", str(history_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "unit exit=0 duration=—" in captured.out
+
+
 def test_history_reports_flaky_task_names(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     history_path = tmp_path / "runs.jsonl"
     append_run_result(history_path, RunResult("unit", "pytest tests", 1, 0.4))

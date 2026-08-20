@@ -93,6 +93,16 @@ def test_filter_run_history_by_status() -> None:
     assert filter_run_history(records, "failed") == [{"task_name": "smoke", "status": "failed"}]
 
 
+def test_filter_run_history_uses_exit_code_when_status_missing() -> None:
+    records = [
+        {"task_name": "unit", "exit_code": 0},
+        {"task_name": "smoke", "exit_code": 1},
+    ]
+
+    assert filter_run_history(records, "failed") == [{"task_name": "smoke", "exit_code": 1}]
+    assert filter_run_history(records, "passed") == [{"task_name": "unit", "exit_code": 0}]
+
+
 def test_latest_run_for_task_returns_most_recent_match() -> None:
     records = [
         {"task_name": "unit", "status": "failed", "exit_code": 1},

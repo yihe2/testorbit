@@ -181,9 +181,12 @@ def show_history(history_path: Path, limit: int, status: str | None) -> int:
         console.print("Flaky: " + ", ".join(flaky))
 
     for record in records[-limit:]:
+        duration = record.get("duration_seconds")
+        duration_text = "—" if duration is None else f"{duration}s"
         console.print(
-            f"{record['task_name']} exit={record['exit_code']} "
-            f"duration={record['duration_seconds']}s"
+            f"{record.get('task_name') or '(unknown)'} "
+            f"exit={record.get('exit_code', '?')} "
+            f"duration={duration_text}"
         )
     return 0
 

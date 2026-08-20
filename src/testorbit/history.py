@@ -10,11 +10,15 @@ DEFAULT_HISTORY_PATH = Path("run-history/runs.jsonl")
 DEFAULT_FLAKY_THRESHOLD = 2
 
 
-def _record_failed(record: dict) -> bool:
+def _record_status(record: dict) -> str:
     status = record.get("status")
     if status in {"passed", "failed"}:
-        return status == "failed"
-    return record.get("exit_code", 1) != 0
+        return status
+    return "passed" if record.get("exit_code", 1) == 0 else "failed"
+
+
+def _record_failed(record: dict) -> bool:
+    return _record_status(record) == "failed"
 
 
 @dataclass(frozen=True)
@@ -100,9 +104,9 @@ def aggregate_task_stats(records: list[dict]) -> list[TaskStats]:
 
 def filter_run_history(records: list[dict], status: str | None = None) -> list[dict]:
     if status is None:
-        return records
+        return list(records)
 
-    return [record for record in records if record.get("status") == status]
+    return [record for record in records if _record_status(record) == status]
 
 
 def latest_run_for_task(records: list[dict], task_name: str) -> dict | None:
