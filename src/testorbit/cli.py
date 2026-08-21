@@ -235,8 +235,10 @@ def add_config_argument(parser: argparse.ArgumentParser) -> None:
 def add_history_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--history-path",
+        "--history",
+        dest="history_path",
         default=str(DEFAULT_HISTORY_PATH),
-        help="JSONL file used to store and read task run history.",
+        help="JSONL run log. Defaults to run-history/runs.jsonl.",
     )
 
 

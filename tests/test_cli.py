@@ -196,6 +196,27 @@ def test_list_help_mentions_last_run_status(capsys: pytest.CaptureFixture[str]) 
     assert "last run status" in captured.out
 
 
+def test_history_flag_is_an_alias_for_history_path(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
+
+    exit_code = main(["history", "--history", str(history_path)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "unit exit=0 duration=0.42s" in captured.out
+
+
+def test_list_help_mentions_history_alias(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as exc_info:
+        main(["list", "--help"])
+
+    captured = capsys.readouterr()
+    assert exc_info.value.code == 0
+    assert "--history" in captured.out
+    assert "run-history/runs.jsonl" in captured.out.replace("\\", "/")
+
+
 def test_root_help_mentions_ci_mode(capsys: pytest.CaptureFixture[str]) -> None:
     with pytest.raises(SystemExit) as exc_info:
         main(["--help"])
