@@ -19,9 +19,16 @@ def get_tasks(data: dict) -> dict:
 
 def validate_tasks(tasks: dict) -> None:
     for task_name, task in tasks.items():
+        if not isinstance(task_name, str) or not task_name.strip() or any(character.isspace() for character in task_name):
+            raise ValueError(f"Task name {task_name!r} must be a single CLI-friendly token.")
         if not isinstance(task, dict):
             raise ValueError(f"Task '{task_name}' must be a mapping.")
         task_command(task, task_name)
+        tags = task.get("tags")
+        if tags is None:
+            continue
+        if not isinstance(tags, list) or not all(isinstance(tag, str) and tag.strip() for tag in tags):
+            raise ValueError(f"Task '{task_name}' tags must be a list of non-empty strings.")
 
 
 def task_command(task: dict, task_name: str) -> str:
@@ -43,7 +50,15 @@ def get_quarantine(data: dict) -> list[str]:
         if not isinstance(item, str) or not item.strip():
             raise ValueError("Quarantine entries must be non-empty task names.")
         names.append(item.strip())
-    return names
+
+    unique: list[str] = []
+    seen: set[str] = set()
+    for name in names:
+        if name in seen:
+            continue
+        seen.add(name)
+        unique.append(name)
+    return unique
 
 
 def validate_quarantine(tasks: dict, quarantine: list[str]) -> None:

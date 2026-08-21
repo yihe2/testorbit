@@ -58,6 +58,16 @@ def test_validate_tasks_requires_command() -> None:
         validate_tasks({"unit": {"tags": ["fast"]}})
 
 
+def test_validate_tasks_rejects_names_with_whitespace() -> None:
+    with pytest.raises(ValueError, match="CLI-friendly token"):
+        validate_tasks({"unit tests": {"command": "pytest"}})
+
+
+def test_validate_tasks_rejects_non_list_tags() -> None:
+    with pytest.raises(ValueError, match="tags must be a list"):
+        validate_tasks({"unit": {"command": "pytest", "tags": "fast"}})
+
+
 def test_task_command_strips_whitespace() -> None:
     assert task_command({"command": "  pytest tests  "}, "unit") == "pytest tests"
 
@@ -95,6 +105,10 @@ def test_get_quarantine_reads_task_names() -> None:
     data = {"tasks": {"smoke": {"command": "pytest -m smoke"}}, "quarantine": ["smoke"]}
 
     assert get_quarantine(data) == ["smoke"]
+
+
+def test_get_quarantine_drops_duplicate_names() -> None:
+    assert get_quarantine({"quarantine": ["smoke", "smoke", "api"]}) == ["smoke", "api"]
 
 
 def test_get_quarantine_rejects_non_list() -> None:

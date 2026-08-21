@@ -86,6 +86,7 @@ def doctor(config: Path) -> int:
 def list_tasks(config: Path, history_path: Path) -> int:
     data = load_config(config)
     tasks = get_tasks(data)
+    validate_tasks(tasks)
     quarantine = resolve_quarantine(data, tasks)
 
     if not tasks:
@@ -108,6 +109,7 @@ def list_tasks(config: Path, history_path: Path) -> int:
 def show_task(config: Path, task_name: str, history_path: Path) -> int:
     data = load_config(config)
     tasks = get_tasks(data)
+    validate_tasks(tasks)
     quarantine = resolve_quarantine(data, tasks)
 
     task = tasks.get(task_name)
@@ -127,6 +129,7 @@ def show_task(config: Path, task_name: str, history_path: Path) -> int:
 def run_task(config: Path, task_name: str, dry_run: bool, history_path: Path) -> int:
     data = load_config(config)
     tasks = get_tasks(data)
+    validate_tasks(tasks)
     quarantine = resolve_quarantine(data, tasks)
 
     task = tasks.get(task_name)
