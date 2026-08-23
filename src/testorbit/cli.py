@@ -336,7 +336,7 @@ def main(argv: list[str] | None = None) -> int:
             return export_history(Path(args.history_path), Path(args.output), args.status)
         if args.command == "report":
             return write_report(Path(args.history_path), Path(args.output), args.status)
-    except ValueError as exc:
+    except (ValueError, OSError) as exc:
         console.print(f"[red]{exc}[/red]")
         return 1
 

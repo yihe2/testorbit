@@ -469,6 +469,21 @@ def test_export_history_writes_json_file(tmp_path: Path, capsys: pytest.CaptureF
     assert export_path.exists()
 
 
+def test_export_maps_oserror_to_exit_code_one(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    history_path = tmp_path / "runs.jsonl"
+    append_run_result(history_path, RunResult("unit", "pytest tests", 0, 0.42))
+
+    with patch("testorbit.cli.export_run_history", side_effect=PermissionError("Permission denied: reports")):
+        exit_code = main(
+            ["export-history", "--history-path", str(history_path), "--output", str(tmp_path / "runs.json")]
+        )
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "Permission denied: reports" in captured.out
+    assert "Traceback" not in captured.out
+
+
 def test_report_writes_html_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     history_path = tmp_path / "runs.jsonl"
     output_path = tmp_path / "reports" / "summary.html"
