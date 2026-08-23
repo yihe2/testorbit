@@ -9,7 +9,7 @@ TestOrbit discovers work from a YAML config file instead of scanning the filesys
 3. Treat each key as a CLI task name such as `unit`, `smoke`, or `api`.
 4. Require every task to define a `command`.
 
-`doctor` validates that shape. `list` prints the discovered names. `show` prints one task's fields.
+`doctor`, `list`, `show`, and `run` all validate that shape. `list` prints the discovered names. `show` prints one task's fields.
 
 ## Commands That Use Discovery
 

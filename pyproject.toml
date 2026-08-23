@@ -8,6 +8,7 @@ version = "0.1.0"
 description = "A lightweight CLI to simplify local test automation workflows."
 readme = "README.md"
 requires-python = ">=3.11"
+keywords = ["testing", "cli", "pytest", "reports"]
 authors = [
   { name = "Mike" }
 ]
@@ -16,6 +17,10 @@ dependencies = [
   "rich>=13.7",
   "jinja2>=3.1",
 ]
+
+[project.urls]
+Homepage = "https://github.com/yihe2/testorbit"
+Issues = "https://github.com/yihe2/testorbit/issues"
 
 [project.optional-dependencies]
 dev = [

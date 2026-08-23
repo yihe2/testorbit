@@ -21,6 +21,14 @@ testorbit version
 
 Expect `TestOrbit 0.1.0`. If the command is not found, the scripts directory for that interpreter is not on PATH.
 
+Confirm the install includes the HTML template:
+
+```powershell
+python -c "from testorbit.report import TEMPLATES_DIR, SUMMARY_TEMPLATE; print((TEMPLATES_DIR / SUMMARY_TEMPLATE).exists())"
+```
+
+That should print `True`. `pip show testorbit` should list the package location.
+
 ## 3. Package Tests
 
 ```powershell

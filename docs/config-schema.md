@@ -1,6 +1,6 @@
-# Config Schema Draft
+# Config Schema
 
-This draft defines the initial shape of `testorbit.yml` for the MVP.
+`testorbit.yml` is a mapping of named tasks plus an optional quarantine list.
 
 ## Top-Level Structure
 
@@ -29,9 +29,11 @@ quarantine:
 - the root document must be a mapping
 - `tasks` must be a mapping
 - each task must define a `command`
-- task names should be unique and CLI-friendly because `list`, `show`, and `run` look up the same keys
+- task names must be non-empty CLI tokens with no whitespace
 - `quarantine` must be a list of existing task names when present
 - empty quarantine lists are treated the same as omitting the key
+- duplicate quarantine names are ignored
+- `tags`, when present, must be a list of non-empty strings
 
 ## Near-Term Extensions
 
