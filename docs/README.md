@@ -24,3 +24,4 @@ Start here after cloning:
 - [weekly-commit-plan.md](weekly-commit-plan.md)
 - [backlog.md](backlog.md)
 - [dev-notes.md](dev-notes.md)
+- [release-checklist.md](release-checklist.md)
