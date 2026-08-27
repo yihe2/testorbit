@@ -166,3 +166,16 @@ def test_build_report_reads_history_file(tmp_path: Path) -> None:
     assert summary.total == 1
     assert summary.failed == 1
     assert summary.records[0]["task_name"] == "smoke"
+
+
+def test_committed_sample_report_matches_current_layout() -> None:
+    sample = Path(__file__).resolve().parents[1] / "docs" / "examples" / "summary.html"
+    text = sample.read_text(encoding="utf-8")
+
+    assert "2 passed, 1 failed across 3 runs" in text
+    assert "Total runs" in text
+    assert "Flaky tasks" in text
+    assert "<th>Result</th>" in text
+    assert "table-layout: fixed" in text
+    assert "Passed" in text
+    assert "Failed" in text

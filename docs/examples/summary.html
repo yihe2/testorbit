@@ -24,9 +24,12 @@
       .lede { color: var(--muted); margin-top: 0; }
       .cards {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 1rem;
         margin: 1.5rem 0;
+      }
+      @media (max-width: 720px) {
+        .cards { grid-template-columns: repeat(2, 1fr); }
       }
       .card {
         background: var(--card);
@@ -47,6 +50,7 @@
       }
       .card.passed p { color: var(--passed); }
       .card.failed p { color: var(--failed); }
+      .card.flaky p { color: #f08c00; }
       .chart {
         display: flex;
         height: 16px;
@@ -62,56 +66,68 @@
         border-collapse: collapse;
         background: var(--card);
         border: 1px solid var(--border);
+        table-layout: fixed;
       }
       th, td {
         text-align: left;
         padding: 0.7rem 0.9rem;
         border-bottom: 1px solid var(--border);
+        word-break: break-word;
       }
       th { color: var(--muted); font-size: 0.85rem; }
+      tr:last-child td { border-bottom: none; }
       tr.passed td:nth-child(2) { color: var(--passed); }
       tr.failed td:nth-child(2) { color: var(--failed); }
     </style>
   </head>
   <body>
     <h1>TestOrbit Summary</h1>
-    <p class="lede">1 passed, 1 failed, 2 total</p>
+    <p class="lede">2 passed, 1 failed across 3 runs</p>
     <section class="cards">
       <article class="card total">
-        <h2>Total</h2>
-        <p>2</p>
+        <h2>Total runs</h2>
+        <p>3</p>
       </article>
       <article class="card passed">
         <h2>Passed</h2>
-        <p>1</p>
+        <p>2</p>
       </article>
       <article class="card failed">
         <h2>Failed</h2>
         <p>1</p>
       </article>
+      <article class="card flaky">
+        <h2>Flaky tasks</h2>
+        <p>0</p>
+      </article>
     </section>
-    <div class="chart" role="img" aria-label="1 passed, 1 failed">
-      <div class="bar passed" style="width: 50.0%"></div>
-      <div class="bar failed" style="width: 50.0%"></div>
+    <div class="chart" role="img" aria-label="2 passed, 1 failed">
+      <div class="bar passed" style="width: 66.7%"></div>
+      <div class="bar failed" style="width: 33.3%"></div>
     </div>
     <table>
       <thead>
         <tr>
           <th>Task</th>
-          <th>Status</th>
+          <th>Result</th>
           <th>Duration</th>
         </tr>
       </thead>
       <tbody>
         <tr class="passed">
           <td>unit</td>
-          <td>passed</td>
+          <td>Passed</td>
           <td>0.42s</td>
         </tr>
         <tr class="failed">
           <td>smoke</td>
-          <td>failed</td>
-          <td>0.8s</td>
+          <td>Failed</td>
+          <td>0.80s</td>
+        </tr>
+        <tr class="passed">
+          <td>api</td>
+          <td>Passed</td>
+          <td>0.31s</td>
         </tr>
       </tbody>
     </table>
