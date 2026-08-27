@@ -76,6 +76,7 @@ testorbit --ci report --history reports/runs.jsonl
 - [docs/quickstart.md](docs/quickstart.md) — first run
 - [docs/setup.md](docs/setup.md) — verify a clone
 - [docs/release-checklist.md](docs/release-checklist.md) — cut a version
+- [CHANGELOG.md](CHANGELOG.md) — release notes
 - [docs/config-schema.md](docs/config-schema.md) and `testorbit.example.yml`
 - [docs/troubleshooting.md](docs/troubleshooting.md)
 

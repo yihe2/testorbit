@@ -25,3 +25,5 @@ Start here after cloning:
 - [backlog.md](backlog.md)
 - [dev-notes.md](dev-notes.md)
 - [release-checklist.md](release-checklist.md)
+
+Release notes live in [CHANGELOG.md](../CHANGELOG.md).
