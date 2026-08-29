@@ -19,7 +19,7 @@ pip install -e ".[dev]"
 testorbit version
 ```
 
-Expect `TestOrbit 0.1.0`. If the command is not found, the scripts directory for that interpreter is not on PATH.
+Expect `TestOrbit 1.0.0`. If the command is not found, the scripts directory for that interpreter is not on PATH.
 
 Confirm the install includes the HTML template:
 

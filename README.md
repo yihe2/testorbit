@@ -1,6 +1,7 @@
 # TestOrbit
 
 [![CI](https://github.com/yihe2/testorbit/actions/workflows/ci.yml/badge.svg)](https://github.com/yihe2/testorbit/actions/workflows/ci.yml)
+[![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-green.svg)](CHANGELOG.md)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
 TestOrbit is a lightweight CLI for named test tasks. Save commands in YAML, run them by alias, keep JSONL history, and render an HTML summary.

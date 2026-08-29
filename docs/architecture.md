@@ -24,8 +24,6 @@ Task discovery is a config lookup, not a filesystem walk. The flow is documented
 
 `testorbit.report` turns run-history records into a `ReportSummary` and renders `templates/summary.html.j2` with Jinja2. Default artifacts land in `reports/`, which is gitignored. CI jobs can also write history to `reports/runs.jsonl` so one folder upload has the JSONL log, JSON export, and HTML page. Usage notes live in [reports.md](reports.md) and [ci.md](ci.md).
 
-## Near-Term Direction
+## 1.0 Shape
 
-- bug-fix and coverage pass in Week 17
-- cut `v1.0.0` by August 31
-- keep subprocess behavior isolated behind runner tests
+The CLI, config, runner, history, and report layers above are the 1.0 surface. Keep subprocess behavior isolated behind runner tests.
