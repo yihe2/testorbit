@@ -9,7 +9,7 @@ This backlog captures the first set of product questions and candidate tasks for
 - what metadata is useful enough to store after each run
 - how much reporting is needed for the MVP
 
-## Shipped
+## Shipped In 1.0
 
 - named task config and `doctor`
 - `run` with history, JSON export, and HTML reports
@@ -18,10 +18,9 @@ This backlog captures the first set of product questions and candidate tasks for
 - quarantine list support
 - demo project under `examples/demo`
 
-## Still Open
+## After 1.0
 
-- retries at the task or failed-test level
-- include/exclude filters
+See [post-release.md](post-release.md) for retry, include/exclude, duration trends, and related follow-ups.
 
 ## Cut For 1.0
 

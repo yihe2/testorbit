@@ -81,4 +81,4 @@ testorbit --ci report --history reports/runs.jsonl
 - [docs/config-schema.md](docs/config-schema.md) and `testorbit.example.yml`
 - [docs/troubleshooting.md](docs/troubleshooting.md)
 
-This repo is a 4-month portfolio build from **May 1, 2026** to **August 31, 2026**. Planning notes live in [docs/roadmap.md](docs/roadmap.md) and [docs/weekly-commit-plan.md](docs/weekly-commit-plan.md).
+This repo is a 4-month portfolio build from **May 1, 2026** to **August 31, 2026**. It shipped as **1.0.0**. See [CHANGELOG.md](CHANGELOG.md), [docs/retrospective.md](docs/retrospective.md), and [docs/post-release.md](docs/post-release.md).

@@ -26,4 +26,4 @@ Task discovery is a config lookup, not a filesystem walk. The flow is documented
 
 ## 1.0 Shape
 
-The CLI, config, runner, history, and report layers above are the 1.0 surface. Keep subprocess behavior isolated behind runner tests.
+The CLI, config, runner, history, and report layers above are the 1.0 surface. Keep subprocess behavior isolated behind runner tests. Ideas that missed 1.0 are in [post-release.md](post-release.md).
