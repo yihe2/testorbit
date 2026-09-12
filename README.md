@@ -38,7 +38,7 @@ HTML summary cards:
 
 ![TestOrbit HTML summary](docs/examples/report-cards.svg)
 
-Open the committed sample report at [docs/examples/summary.html](docs/examples/summary.html) for the full page, including the run table.
+Open the sample report at [docs/examples/summary.html](docs/examples/summary.html) for the full page, including the run table.
 
 ## What Ships
 
@@ -76,9 +76,6 @@ testorbit --ci report --history reports/runs.jsonl
 - [docs/README.md](docs/README.md) — index
 - [docs/quickstart.md](docs/quickstart.md) — first run
 - [docs/setup.md](docs/setup.md) — verify a clone
-- [docs/release-checklist.md](docs/release-checklist.md) — cut a version
 - [CHANGELOG.md](CHANGELOG.md) — release notes
 - [docs/config-schema.md](docs/config-schema.md) and `testorbit.example.yml`
 - [docs/troubleshooting.md](docs/troubleshooting.md)
-
-This repo is a 4-month portfolio build from **May 1, 2026** to **August 31, 2026**. It shipped as **1.0.0**. See [CHANGELOG.md](CHANGELOG.md), [docs/retrospective.md](docs/retrospective.md), and [docs/post-release.md](docs/post-release.md).
